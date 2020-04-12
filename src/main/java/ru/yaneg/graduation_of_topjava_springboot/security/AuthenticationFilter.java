@@ -15,6 +15,7 @@ import ru.yaneg.graduation_of_topjava_springboot.shared.dto.UserDto;
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.request.UserLoginRequest;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -56,7 +57,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest req,
                                             HttpServletResponse res,
                                             FilterChain chain,
-                                            Authentication auth)  {
+                                            Authentication auth)  throws IOException, ServletException {
 
         String userName = ((User) auth.getPrincipal()).getUsername();
 
