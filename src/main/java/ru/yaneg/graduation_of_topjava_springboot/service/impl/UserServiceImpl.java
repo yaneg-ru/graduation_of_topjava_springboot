@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.yaneg.graduation_of_topjava_springboot.io.UserEntity;
-import ru.yaneg.graduation_of_topjava_springboot.repository.UserRepository;
+import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.UserEntity;
+import ru.yaneg.graduation_of_topjava_springboot.io.repository.UserRepository;
 import ru.yaneg.graduation_of_topjava_springboot.service.UserService;
 import ru.yaneg.graduation_of_topjava_springboot.shared.Utils;
 import ru.yaneg.graduation_of_topjava_springboot.shared.dto.UserDto;
@@ -45,6 +45,17 @@ public class UserServiceImpl implements UserService {
         UserDto returnValue = new UserDto();
         BeanUtils.copyProperties(storedUserDetails, returnValue);
 
+        return returnValue;
+    }
+
+    @Override
+    public UserDto getUser(String email) {
+        UserEntity userEntity = userRepository.findByEmail(email);
+        if (userEntity==null) {
+            throw new UsernameNotFoundException(email);
+        }
+        UserDto returnValue = new UserDto();
+        BeanUtils.copyProperties(userEntity, returnValue);
         return returnValue;
     }
 

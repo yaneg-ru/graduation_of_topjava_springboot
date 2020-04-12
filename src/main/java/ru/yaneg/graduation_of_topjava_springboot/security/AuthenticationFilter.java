@@ -9,10 +9,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ru.yaneg.graduation_of_topjava_springboot.SpringApplicationContext;
+import ru.yaneg.graduation_of_topjava_springboot.service.UserService;
+import ru.yaneg.graduation_of_topjava_springboot.shared.dto.UserDto;
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.request.UserLoginRequest;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -63,11 +65,12 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
                 .compact();
-        //UserService userService = (UserService)SpringApplicationContext.getBean("userServiceImpl");
-        //UserDto userDto = userService.getUser(userName);
+
+        UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
+        UserDto userDto = userService.getUser(userName);
 
         res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
-        //res.addHeader("UserID", userDto.getUserId());
+        res.addHeader("PublicUserID", userDto.getPublicUserId());
 
     }
 

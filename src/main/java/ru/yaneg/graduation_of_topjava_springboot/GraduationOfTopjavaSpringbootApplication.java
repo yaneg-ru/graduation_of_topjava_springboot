@@ -17,4 +17,10 @@ public class GraduationOfTopjavaSpringbootApplication {
 		return new BCryptPasswordEncoder();
 	}
 
+	@Bean
+	public SpringApplicationContext springApplicationContext()
+	{
+		return new SpringApplicationContext();
+	}
+
 }

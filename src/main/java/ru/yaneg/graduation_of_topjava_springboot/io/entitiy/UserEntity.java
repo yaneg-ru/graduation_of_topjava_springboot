@@ -1,4 +1,4 @@
-package ru.yaneg.graduation_of_topjava_springboot.io;
+package ru.yaneg.graduation_of_topjava_springboot.io.entitiy;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
