@@ -3,11 +3,10 @@ package ru.yaneg.graduation_of_topjava_springboot.ui.controller;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yaneg.graduation_of_topjava_springboot.io.UserEntity;
 import ru.yaneg.graduation_of_topjava_springboot.service.UserService;
 import ru.yaneg.graduation_of_topjava_springboot.shared.dto.UserDto;
-import ru.yaneg.graduation_of_topjava_springboot.ui.model.request.UserDetailsRequestModel;
-import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.UserRest;
+import ru.yaneg.graduation_of_topjava_springboot.ui.model.request.UserRequest;
+import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.UserResponse;
 
 @RestController
 @RequestMapping("users") // http://localhost:8080/users
@@ -22,12 +21,13 @@ public class UserController {
     }
 
     @PostMapping
-    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
+    public UserResponse createUser(@RequestBody UserRequest userRequest) {
 
-        UserRest returnValue = new UserRest();
+        UserResponse returnValue = new UserResponse();
 
         UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(userDetailsRequestModel, userDto);
+        BeanUtils.copyProperties(userRequest, userDto);
+
         //ModelMapper modelMapper = new ModelMapper();
         //UserDto userDto = modelMapper.map(userDetails, UserDto.class);
 

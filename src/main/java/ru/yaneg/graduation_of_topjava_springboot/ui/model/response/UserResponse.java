@@ -1,17 +1,17 @@
 package ru.yaneg.graduation_of_topjava_springboot.ui.model.response;
 
-public class UserRest {
-    private String userId;
+public class UserResponse {
+    private String publicUserId;
     private String firstName;
     private String lastName;
     private String email;
 
-    public String getUserId() {
-        return userId;
+    public String getPublicUserId() {
+        return publicUserId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setPublicUserId(String publicUserId) {
+        this.publicUserId = publicUserId;
     }
 
     public String getFirstName() {

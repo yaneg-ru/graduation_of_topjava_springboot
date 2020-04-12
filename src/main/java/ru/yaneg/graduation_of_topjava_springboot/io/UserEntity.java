@@ -16,7 +16,7 @@ public class UserEntity implements Serializable {
     private long id;
 
     @Column(nullable = false)
-    private String userId;
+    private String publicUserId;
 
     @Column(nullable = false, length = 50)
     private String firstName;
@@ -43,12 +43,12 @@ public class UserEntity implements Serializable {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getPublicUserId() {
+        return publicUserId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setPublicUserId(String userId) {
+        this.publicUserId = userId;
     }
 
     public String getFirstName() {
