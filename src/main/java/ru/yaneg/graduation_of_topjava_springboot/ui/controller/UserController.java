@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yaneg.graduation_of_topjava_springboot.service.UserService;
 import ru.yaneg.graduation_of_topjava_springboot.shared.dto.UserDto;
-import ru.yaneg.graduation_of_topjava_springboot.ui.model.request.UserRequest;
+import ru.yaneg.graduation_of_topjava_springboot.ui.model.request.UserCreateRequest;
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.UserResponse;
 
 @RestController
@@ -21,12 +21,12 @@ public class UserController {
     }
 
     @PostMapping
-    public UserResponse createUser(@RequestBody UserRequest userRequest) {
+    public UserResponse createUser(@RequestBody UserCreateRequest userCreateRequest) {
 
         UserResponse returnValue = new UserResponse();
 
         UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(userRequest, userDto);
+        BeanUtils.copyProperties(userCreateRequest, userDto);
 
         //ModelMapper modelMapper = new ModelMapper();
         //UserDto userDto = modelMapper.map(userDetails, UserDto.class);
