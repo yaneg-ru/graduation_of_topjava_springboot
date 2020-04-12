@@ -1,7 +1,8 @@
 package ru.yaneg.graduation_of_topjava_springboot.service;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.yaneg.graduation_of_topjava_springboot.shared.dto.UserDto;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
     UserDto createUser(UserDto userDto);
 }
