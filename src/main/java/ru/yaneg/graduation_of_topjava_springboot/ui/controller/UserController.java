@@ -3,6 +3,7 @@ package ru.yaneg.graduation_of_topjava_springboot.ui.controller;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yaneg.graduation_of_topjava_springboot.io.UserEntity;
 import ru.yaneg.graduation_of_topjava_springboot.service.UserService;
 import ru.yaneg.graduation_of_topjava_springboot.shared.dto.UserDto;
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.request.UserDetailsRequestModel;
