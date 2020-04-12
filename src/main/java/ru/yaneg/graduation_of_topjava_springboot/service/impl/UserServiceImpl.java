@@ -2,6 +2,7 @@ package ru.yaneg.graduation_of_topjava_springboot.service.impl;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.yaneg.graduation_of_topjava_springboot.io.UserEntity;
 import ru.yaneg.graduation_of_topjava_springboot.repository.UserRepository;
@@ -18,6 +19,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     Utils utils;
 
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Override
     public UserDto createUser(UserDto user) {
 
@@ -29,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
         BeanUtils.copyProperties(user, userEntity);
         userEntity.setPublicUserId(utils.generateAlphabetUserId(30));
-        userEntity.setEncryptedPassword("test");
+        userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
         UserEntity storedUserDetails = userRepository.save(userEntity);
 
