@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.yaneg.graduation_of_topjava_springboot.service.UserService;
 import ru.yaneg.graduation_of_topjava_springboot.shared.dto.UserDto;
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.request.UserDetailsRequest;
+import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.OperationStatusModel;
+import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.RequestOperationStatus;
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.UserResponse;
 
 @RestController
@@ -52,8 +54,11 @@ public class UserController {
         return returnValue;
     }
 
-    @DeleteMapping
-    public String deleteUser() {
-        return "delete user was called";
-    }
-}
+    @DeleteMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE })
+    public OperationStatusModel deleteUser(@PathVariable String id) {
+        OperationStatusModel returnValue = new OperationStatusModel();
+        returnValue.setOperationName(RequestOperationName.DELETE.name());
+        userService.deleteUser(id);
+        returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        return returnValue;
+    }}

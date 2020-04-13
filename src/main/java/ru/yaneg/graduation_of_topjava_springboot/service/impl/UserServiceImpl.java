@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findByPublicUserId(publicUserId);
 
         if (userEntity == null) {
-            throw new RuntimeException("User didn't find");
+            throw new UsernameNotFoundException("User with ID: " + publicUserId + " not found");
         }
 
         userEntity.setFirstName(user.getFirstName());
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUser(String email) {
         UserEntity userEntity = userRepository.findByEmail(email);
         if (userEntity == null) {
-            throw new UsernameNotFoundException(email);
+            throw new UsernameNotFoundException("User with email: " + email + " not found");
         }
         UserDto returnValue = new UserDto();
         BeanUtils.copyProperties(userEntity, returnValue);
@@ -87,6 +87,15 @@ public class UserServiceImpl implements UserService {
         }
         BeanUtils.copyProperties(userEntity, returnValue);
         return returnValue;
+    }
+
+    @Override
+    public void deleteUser(String publicUserId) {
+        UserEntity userEntity = userRepository.findByPublicUserId(publicUserId);
+        if (userEntity == null) {
+            throw new UsernameNotFoundException("User with ID: " + publicUserId + " not found");
+        }
+        userRepository.delete(userEntity);
     }
 
 
