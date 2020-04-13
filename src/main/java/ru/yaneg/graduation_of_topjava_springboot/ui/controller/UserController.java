@@ -17,7 +17,7 @@ public class UserController {
     UserService userService;
 
     //@GetMapping(path = "/{id}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public UserResponse getUser(@PathVariable String id) {
         UserResponse returnValue = new UserResponse();
 
@@ -30,7 +30,7 @@ public class UserController {
         return returnValue;
     }
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public UserResponse createUser(@RequestBody UserCreateRequest userCreateRequest) {
 
         UserResponse returnValue = new UserResponse();
