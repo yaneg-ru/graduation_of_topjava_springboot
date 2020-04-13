@@ -11,6 +11,10 @@ import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.OperationStat
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.RequestOperationStatus;
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.UserResponse;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("users") // http://localhost:8080/users
 public class UserController {
@@ -61,4 +65,21 @@ public class UserController {
         userService.deleteUser(id);
         returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
         return returnValue;
-    }}
+    }
+
+    @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
+    public List<UserResponse> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
+                                   @RequestParam(value = "limit", defaultValue = "25") int limit) {
+        List<UserResponse> returnValue = new ArrayList<>();
+
+        List<UserDto> users = userService.getUsers(page, limit);
+
+		for (UserDto userDto : users) {
+			UserResponse userModel = new UserResponse();
+			BeanUtils.copyProperties(userDto, userModel);
+			returnValue.add(userModel);
+		}
+
+        return returnValue;
+    }
+}
