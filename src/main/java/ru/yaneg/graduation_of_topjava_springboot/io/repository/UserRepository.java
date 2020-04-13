@@ -8,4 +8,5 @@ import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.UserEntity;
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     UserEntity findByEmail(String email);
+    UserEntity findByPublicUserId(String publicUserId);
 }

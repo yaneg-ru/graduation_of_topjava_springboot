@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto user) {
 
         if (userRepository.findByEmail(user.getEmail()) != null) {
-            throw  new RuntimeException("Record already exists");
+            throw new RuntimeException("Record already exists");
         }
 
         UserEntity userEntity = new UserEntity();
@@ -51,10 +51,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUser(String email) {
         UserEntity userEntity = userRepository.findByEmail(email);
-        if (userEntity==null) {
+        if (userEntity == null) {
             throw new UsernameNotFoundException(email);
         }
         UserDto returnValue = new UserDto();
+        BeanUtils.copyProperties(userEntity, returnValue);
+        return returnValue;
+    }
+
+    @Override
+    public UserDto getUserByPublicUserID(String publicUserId) {
+        UserDto returnValue = new UserDto();
+        UserEntity userEntity = userRepository.findByPublicUserId(publicUserId);
+        if (userEntity == null) {
+            throw new UsernameNotFoundException("User with ID: " + publicUserId + " not found");
+        }
         BeanUtils.copyProperties(userEntity, returnValue);
         return returnValue;
     }
@@ -63,9 +74,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByEmail(email);
-        if (userEntity==null) {
+        if (userEntity == null) {
             throw new UsernameNotFoundException(email);
         }
-        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(),new ArrayList<>());
+        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
     }
 }

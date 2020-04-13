@@ -2,6 +2,7 @@ package ru.yaneg.graduation_of_topjava_springboot.ui.controller;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.yaneg.graduation_of_topjava_springboot.service.UserService;
 import ru.yaneg.graduation_of_topjava_springboot.shared.dto.UserDto;
@@ -15,9 +16,18 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping
-    public String getUser() {
-        return "get user was called";
+    //@GetMapping(path = "/{id}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    @GetMapping(path = "/{id}")
+    public UserResponse getUser(@PathVariable String id) {
+        UserResponse returnValue = new UserResponse();
+
+        UserDto userDto = userService.getUserByPublicUserID(id);
+        BeanUtils.copyProperties(userDto, returnValue);
+
+        //ModelMapper modelMapper = new ModelMapper();
+        //returnValue = modelMapper.map(userDto, UserRest.class);
+
+        return returnValue;
     }
 
     @PostMapping
