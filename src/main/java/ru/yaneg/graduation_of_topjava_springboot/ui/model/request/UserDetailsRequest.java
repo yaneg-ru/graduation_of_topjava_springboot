@@ -1,6 +1,6 @@
 package ru.yaneg.graduation_of_topjava_springboot.ui.model.request;
 
-public class UserCreateRequest {
+public class UserDetailsRequest {
     private String firstName;
     private String lastName;
     private String email;
