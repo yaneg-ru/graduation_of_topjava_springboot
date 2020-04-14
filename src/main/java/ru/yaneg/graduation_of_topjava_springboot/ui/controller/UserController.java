@@ -1,5 +1,6 @@
 package ru.yaneg.graduation_of_topjava_springboot.ui.controller;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,12 +23,16 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    private ModelMapper modelMapper = new ModelMapper();
+
     @GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public UserResponse getUser(@PathVariable String id) {
         UserResponse returnValue = new UserResponse();
 
         UserDto userDto = userService.getUserByPublicUserID(id);
-        BeanUtils.copyProperties(userDto, returnValue);
+
+        returnValue = modelMapper.map(userDto, UserResponse.class);
+        // BeanUtils.copyProperties(userDto, returnValue);
 
         return returnValue;
     }
@@ -37,10 +42,12 @@ public class UserController {
         UserResponse returnValue = new UserResponse();
 
         UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(userDetailsRequest, userDto);
+        userDto = modelMapper.map(userDetailsRequest, UserDto.class);
+        //BeanUtils.copyProperties(userDetailsRequest, userDto);
 
         UserDto createdUser = userService.createUser(userDto);
-        BeanUtils.copyProperties(createdUser, returnValue);
+        returnValue = modelMapper.map(createdUser, UserResponse.class);
+        //BeanUtils.copyProperties(createdUser, returnValue);
 
         return returnValue;
     }
@@ -50,10 +57,12 @@ public class UserController {
         UserResponse returnValue = new UserResponse();
 
         UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(userDetailsRequest, userDto);
+        userDto = modelMapper.map(userDetailsRequest, UserDto.class);
+        //BeanUtils.copyProperties(userDetailsRequest, userDto);
 
         UserDto updatedUser = userService.updateUser(id, userDto);
-        BeanUtils.copyProperties(updatedUser, returnValue);
+        returnValue = modelMapper.map(updatedUser, UserResponse.class);
+        //BeanUtils.copyProperties(updatedUser, returnValue);
 
         return returnValue;
     }
@@ -76,7 +85,8 @@ public class UserController {
 
 		for (UserDto userDto : users) {
 			UserResponse userModel = new UserResponse();
-			BeanUtils.copyProperties(userDto, userModel);
+            userModel = modelMapper.map(userDto, UserResponse.class);
+			//BeanUtils.copyProperties(userDto, userModel);
 			returnValue.add(userModel);
 		}
 
