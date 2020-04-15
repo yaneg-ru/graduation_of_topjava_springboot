@@ -1,7 +1,6 @@
 package ru.yaneg.graduation_of_topjava_springboot.ui.controller;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,6 @@ import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.OperationStat
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.RequestOperationStatus;
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.UserResponse;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +24,13 @@ public class UserController {
     private ModelMapper modelMapper = new ModelMapper();
 
     @GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @CrossOrigin
     public UserResponse getUser(@PathVariable String id) {
         UserResponse returnValue = new UserResponse();
 
         UserDto userDto = userService.getUserByPublicUserID(id);
 
         returnValue = modelMapper.map(userDto, UserResponse.class);
-        // BeanUtils.copyProperties(userDto, returnValue);
 
         return returnValue;
     }
@@ -41,13 +39,10 @@ public class UserController {
     public UserResponse createUser(@RequestBody UserDetailsRequest userDetailsRequest) {
         UserResponse returnValue = new UserResponse();
 
-        UserDto userDto = new UserDto();
-        userDto = modelMapper.map(userDetailsRequest, UserDto.class);
-        //BeanUtils.copyProperties(userDetailsRequest, userDto);
+        UserDto userDto = modelMapper.map(userDetailsRequest, UserDto.class);
 
         UserDto createdUser = userService.createUser(userDto);
         returnValue = modelMapper.map(createdUser, UserResponse.class);
-        //BeanUtils.copyProperties(createdUser, returnValue);
 
         return returnValue;
     }
@@ -56,13 +51,10 @@ public class UserController {
     public UserResponse updateUser(@PathVariable String id, @RequestBody UserDetailsRequest userDetailsRequest) {
         UserResponse returnValue = new UserResponse();
 
-        UserDto userDto = new UserDto();
-        userDto = modelMapper.map(userDetailsRequest, UserDto.class);
-        //BeanUtils.copyProperties(userDetailsRequest, userDto);
+        UserDto userDto = modelMapper.map(userDetailsRequest, UserDto.class);
 
         UserDto updatedUser = userService.updateUser(id, userDto);
         returnValue = modelMapper.map(updatedUser, UserResponse.class);
-        //BeanUtils.copyProperties(updatedUser, returnValue);
 
         return returnValue;
     }
@@ -86,7 +78,6 @@ public class UserController {
 		for (UserDto userDto : users) {
 			UserResponse userModel = new UserResponse();
             userModel = modelMapper.map(userDto, UserResponse.class);
-			//BeanUtils.copyProperties(userDto, userModel);
 			returnValue.add(userModel);
 		}
 
