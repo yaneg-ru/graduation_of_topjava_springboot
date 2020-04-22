@@ -1,19 +1,13 @@
 package ru.yaneg.graduation_of_topjava_springboot.io.entitiy;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity(name="users")
-public class UserEntity implements Serializable {
+public class UserEntity extends AbstractBaseEntity implements Serializable {
 
     private static final long serialVersionUID = 6450690824246365088L;
-
-    @Id
-    @GeneratedValue
-    private long id;
 
     @Column(nullable = false)
     private String publicUserId;
@@ -30,18 +24,15 @@ public class UserEntity implements Serializable {
     @Column(nullable = false)
     private String encryptedPassword;
 
-    private String emailVerificationToken;
-
     @Column(nullable = false)
-    private Boolean emailVerificationStatus = false;
+    private Boolean emailVerificationStatus = true;
 
-    public long getId() {
-        return id;
-    }
+    @ManyToMany(cascade= { CascadeType.PERSIST }, fetch = FetchType.EAGER )
+    @JoinTable(name="users_roles",
+            joinColumns=@JoinColumn(name="users_id",referencedColumnName="id"),
+            inverseJoinColumns=@JoinColumn(name="roles_id",referencedColumnName="id"))
+    private Set<RoleEntity> roles;
 
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getPublicUserId() {
         return publicUserId;
@@ -83,19 +74,19 @@ public class UserEntity implements Serializable {
         this.encryptedPassword = encryptedPassword;
     }
 
-    public String getEmailVerificationToken() {
-        return emailVerificationToken;
-    }
-
-    public void setEmailVerificationToken(String emailVerificationToken) {
-        this.emailVerificationToken = emailVerificationToken;
-    }
-
     public Boolean getEmailVerificationStatus() {
         return emailVerificationStatus;
     }
 
     public void setEmailVerificationStatus(Boolean emailVerificationStatus) {
         this.emailVerificationStatus = emailVerificationStatus;
+    }
+
+    public Set<RoleEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<RoleEntity> roles) {
+        this.roles = roles;
     }
 }

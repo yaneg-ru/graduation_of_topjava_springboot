@@ -4,14 +4,16 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.Roles;
 import ru.yaneg.graduation_of_topjava_springboot.service.UserService;
 import ru.yaneg.graduation_of_topjava_springboot.shared.dto.UserDto;
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.request.UserDetailsRequest;
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.OperationStatusModel;
-import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.RequestOperationStatus;
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.UserResponse;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 @RestController
@@ -40,7 +42,7 @@ public class UserController {
         UserResponse returnValue = new UserResponse();
 
         UserDto userDto = modelMapper.map(userDetailsRequest, UserDto.class);
-
+        userDto.setRoles(new HashSet<>(Arrays.asList(Roles.ROLE_USER.name())));
         UserDto createdUser = userService.createUser(userDto);
         returnValue = modelMapper.map(createdUser, UserResponse.class);
 
@@ -62,9 +64,9 @@ public class UserController {
     @DeleteMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE })
     public OperationStatusModel deleteUser(@PathVariable String id) {
         OperationStatusModel returnValue = new OperationStatusModel();
-        returnValue.setOperationName(RequestOperationName.DELETE.name());
+        returnValue.setOperationName("DELETE");
         userService.deleteUser(id);
-        returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        returnValue.setOperationResult("SUCCESS");
         return returnValue;
     }
 

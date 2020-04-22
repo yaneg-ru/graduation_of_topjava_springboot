@@ -1,23 +1,30 @@
 package ru.yaneg.graduation_of_topjava_springboot.service.impl;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.yaneg.graduation_of_topjava_springboot.exceptions.UserServiceException;
+import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.RoleEntity;
 import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.UserEntity;
+import ru.yaneg.graduation_of_topjava_springboot.io.repository.RoleRepository;
 import ru.yaneg.graduation_of_topjava_springboot.io.repository.UserRepository;
+import ru.yaneg.graduation_of_topjava_springboot.security.UserPrincipal;
 import ru.yaneg.graduation_of_topjava_springboot.service.UserService;
 import ru.yaneg.graduation_of_topjava_springboot.shared.Utils;
 import ru.yaneg.graduation_of_topjava_springboot.shared.dto.UserDto;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -31,42 +38,34 @@ public class UserServiceImpl implements UserService {
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    RoleRepository roleRepository;
+
     @Override
     public UserDto createUser(UserDto user) {
 
-        if (userRepository.findByEmail(user.getEmail()) != null) {
-            throw new RuntimeException("Record already exists");
-        }
+        if (userRepository.findByEmail(user.getEmail()) != null)
+            throw new UserServiceException("fields.constrains.emailMustBeUnique");
 
-        UserEntity userEntity = new UserEntity();
+        ModelMapper modelMapper = new ModelMapper();
+        UserEntity userEntity = modelMapper.map(user, UserEntity.class);
 
-        BeanUtils.copyProperties(user, userEntity);
-        userEntity.setPublicUserId(utils.generateAlphabetUserId(30));
+        String publicUserId = utils.generateUserId(30);
+        userEntity.setPublicUserId(publicUserId);
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
-        UserEntity storedUserDetails = userRepository.save(userEntity);
-
-        UserDto returnValue = new UserDto();
-        BeanUtils.copyProperties(storedUserDetails, returnValue);
-
-        return returnValue;
-    }
-
-    @Override
-    public UserDto updateUser(String publicUserId, UserDto user) {
-        UserDto returnValue = new UserDto();
-
-        UserEntity userEntity = userRepository.findByPublicUserId(publicUserId);
-
-        if (userEntity == null) {
-            throw new UsernameNotFoundException("User with ID: " + publicUserId + " not found");
+        // Set roles
+        Set<RoleEntity> roleEntities = new HashSet<>();
+        for(String role: user.getRoles()) {
+            RoleEntity roleEntity = roleRepository.findByName(role);
+            if(roleEntity !=null) {
+                roleEntities.add(roleEntity);
+            }
         }
 
-        userEntity.setFirstName(user.getFirstName());
-        userEntity.setLastName(user.getLastName());
-
-        UserEntity updatedUserDetails = userRepository.save(userEntity);
-        BeanUtils.copyProperties(updatedUserDetails, returnValue);
+        userEntity.setRoles(roleEntities);
+        UserEntity storedUserDetails = userRepository.save(userEntity);
+        UserDto returnValue  = modelMapper.map(storedUserDetails, UserDto.class);
 
         return returnValue;
     }
@@ -74,32 +73,68 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUser(String email) {
         UserEntity userEntity = userRepository.findByEmail(email);
-        if (userEntity == null) {
-            throw new UsernameNotFoundException("User with email: " + email + " not found");
-        }
+
+        if (userEntity == null)
+            throw new UsernameNotFoundException(email);
+
         UserDto returnValue = new UserDto();
         BeanUtils.copyProperties(userEntity, returnValue);
+
         return returnValue;
     }
 
     @Override
-    public UserDto getUserByPublicUserID(String publicUserId) {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserEntity userEntity = userRepository.findByEmail(email);
+
+        if (userEntity == null)
+            throw new UsernameNotFoundException(email);
+
+        return new UserPrincipal(userEntity);
+
+    }
+
+    @Override
+    public UserDto getUserByPublicUserID(String userId) {
         UserDto returnValue = new UserDto();
-        UserEntity userEntity = userRepository.findByPublicUserId(publicUserId);
-        if (userEntity == null) {
-            throw new UsernameNotFoundException("User with ID: " + publicUserId + " not found");
-        }
+        UserEntity userEntity = userRepository.findByPublicUserId(userId);
+
+        if (userEntity == null)
+            throw new UsernameNotFoundException("User with ID: " + userId + " not found");
+
         BeanUtils.copyProperties(userEntity, returnValue);
+
         return returnValue;
     }
 
     @Override
-    public void deleteUser(String publicUserId) {
-        UserEntity userEntity = userRepository.findByPublicUserId(publicUserId);
-        if (userEntity == null) {
-            throw new UsernameNotFoundException("User with ID: " + publicUserId + " not found");
-        }
+    public UserDto updateUser(String userId, UserDto user) {
+        UserDto returnValue = new UserDto();
+
+        UserEntity userEntity = userRepository.findByPublicUserId(userId);
+
+        if (userEntity == null)
+            throw new UsernameNotFoundException("Record not found");
+
+        userEntity.setFirstName(user.getFirstName());
+        userEntity.setLastName(user.getLastName());
+
+        UserEntity updatedUserDetails = userRepository.save(userEntity);
+        returnValue = new ModelMapper().map(updatedUserDetails, UserDto.class);
+
+        return returnValue;
+    }
+
+    @Transactional
+    @Override
+    public void deleteUser(String userId) {
+        UserEntity userEntity = userRepository.findByPublicUserId(userId);
+
+        if (userEntity == null)
+            throw new UsernameNotFoundException("Record not found");
+
         userRepository.delete(userEntity);
+
     }
 
     @Override
@@ -122,13 +157,4 @@ public class UserServiceImpl implements UserService {
         return returnValue;
     }
 
-
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserEntity userEntity = userRepository.findByEmail(email);
-        if (userEntity == null) {
-            throw new UsernameNotFoundException(email);
-        }
-        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
-    }
 }

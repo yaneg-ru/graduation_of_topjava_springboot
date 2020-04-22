@@ -1,6 +1,8 @@
 package ru.yaneg.graduation_of_topjava_springboot.shared.dto;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Set;
 
 public class UserDto implements Serializable {
 
@@ -12,13 +14,19 @@ public class UserDto implements Serializable {
     private String email;
     private String password;
     private String encryptedPassword;
-    private String emailVerificationToken;
-    private Boolean emailVerificationStatus = false;
-    // private List<AddressDTO> addresses;
+    private Set<String> roles;
 
 
     public long getId() {
         return id;
+    }
+
+    public Collection<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 
     public void setId(long id) {
@@ -73,19 +81,4 @@ public class UserDto implements Serializable {
         this.encryptedPassword = encryptedPassword;
     }
 
-    public String getEmailVerificationToken() {
-        return emailVerificationToken;
-    }
-
-    public void setEmailVerificationToken(String emailVerificationToken) {
-        this.emailVerificationToken = emailVerificationToken;
-    }
-
-    public Boolean getEmailVerificationStatus() {
-        return emailVerificationStatus;
-    }
-
-    public void setEmailVerificationStatus(Boolean emailVerificationStatus) {
-        this.emailVerificationStatus = emailVerificationStatus;
-    }
 }
