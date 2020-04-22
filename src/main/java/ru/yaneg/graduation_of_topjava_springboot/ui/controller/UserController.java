@@ -11,6 +11,7 @@ import ru.yaneg.graduation_of_topjava_springboot.ui.model.request.UserDetailsReq
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.OperationStatusModel;
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.UserResponse;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -38,7 +39,7 @@ public class UserController {
     }
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public UserResponse createUser(@RequestBody UserDetailsRequest userDetailsRequest) {
+    public UserResponse createUser(@Valid @RequestBody UserDetailsRequest userDetailsRequest) {
         UserResponse returnValue = new UserResponse();
 
         UserDto userDto = modelMapper.map(userDetailsRequest, UserDto.class);

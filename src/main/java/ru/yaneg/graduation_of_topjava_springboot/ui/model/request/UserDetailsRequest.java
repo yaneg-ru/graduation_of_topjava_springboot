@@ -1,9 +1,16 @@
 package ru.yaneg.graduation_of_topjava_springboot.ui.model.request;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
+
 public class UserDetailsRequest {
+    @Size(min = 3, max = 20)
     private String firstName;
+    @Size(min = 3, max = 20)
     private String lastName;
+    @Email
     private String email;
+    @Size(min = 7, max = 20)
     private String password;
 
     public String getFirstName() {
