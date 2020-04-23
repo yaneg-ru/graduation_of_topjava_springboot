@@ -3,12 +3,14 @@ package ru.yaneg.graduation_of_topjava_springboot.exceptions;
 public class ErrorMessage {
     private final String url;
     private final ErrorType type;
-    private final String detail;
+    private final String typeMessage;
+    private final String[] details;
 
-    public ErrorMessage(CharSequence url, ErrorType type, String detail) {
+    public ErrorMessage(CharSequence url, ErrorType type, String typeMessage, String... details) {
         this.url = url.toString();
         this.type = type;
-        this.detail = detail;
+        this.typeMessage = typeMessage;
+        this.details = details;
     }
 
     public String getUrl() {
@@ -19,8 +21,12 @@ public class ErrorMessage {
         return type;
     }
 
-    public String getDetail() {
-        return detail;
+    public String getTypeMessage() {
+        return typeMessage;
+    }
+
+    public String[] getDetails() {
+        return details;
     }
 }
 
