@@ -9,7 +9,7 @@ public abstract class AbstractBaseEntity {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer id;
+    protected Integer id;
 
     protected AbstractBaseEntity() {
     }

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.UserEntity;
 
 @Repository
-public interface UserRepository extends PagingAndSortingRepository<UserEntity, Long> {
+public interface UserRepository extends PagingAndSortingRepository<UserEntity, Integer> {
 
     UserEntity findByEmail(String email);
     UserEntity findByPublicUserId(String publicUserId);

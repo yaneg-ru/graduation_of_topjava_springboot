@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.RoleEntity;
 
 @Repository
-public interface RoleRepository extends CrudRepository<RoleEntity, Long> {
+public interface RoleRepository extends CrudRepository<RoleEntity, Integer> {
     RoleEntity findByName(String name);
 }
 

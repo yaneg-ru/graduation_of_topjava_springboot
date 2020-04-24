@@ -15,11 +15,11 @@ public class UserPrincipal implements UserDetails {
     private static final long serialVersionUID = -8132019642089348375L;
 
     private UserEntity userEntity;
-    private String userId;
+    private String publicUserId;
 
     public UserPrincipal(UserEntity userEntity) {
         this.userEntity = userEntity;
-        this.userId = userEntity.getPublicUserId();
+        this.publicUserId = userEntity.getPublicUserId();
     }
 
     @Override
@@ -72,12 +72,12 @@ public class UserPrincipal implements UserDetails {
         return true;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getPublicUserId() {
+        return publicUserId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setPublicUserId(String publicUserId) {
+        this.publicUserId = publicUserId;
     }
 
 

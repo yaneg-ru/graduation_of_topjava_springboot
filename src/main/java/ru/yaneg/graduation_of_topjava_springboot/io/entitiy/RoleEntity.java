@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 @Entity
-@Table(name="roles")
+@Table(name="ROLE")
 public class RoleEntity extends AbstractNamedEntity implements Serializable {
 
     private static final long serialVersionUID = 5605260522147928803L;

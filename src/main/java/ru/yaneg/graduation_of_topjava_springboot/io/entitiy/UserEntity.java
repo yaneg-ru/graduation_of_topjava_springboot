@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
-@Entity(name="users")
+@Entity(name="USERS")
 public class UserEntity extends AbstractBaseEntity implements Serializable {
 
     private static final long serialVersionUID = 6450690824246365088L;
@@ -28,9 +28,9 @@ public class UserEntity extends AbstractBaseEntity implements Serializable {
     private Boolean emailVerificationStatus = true;
 
     @ManyToMany(cascade= { CascadeType.PERSIST }, fetch = FetchType.EAGER )
-    @JoinTable(name="users_roles",
-            joinColumns=@JoinColumn(name="users_id",referencedColumnName="id"),
-            inverseJoinColumns=@JoinColumn(name="roles_id",referencedColumnName="id"))
+    @JoinTable(name="user_role",
+            joinColumns=@JoinColumn(name="user_id",referencedColumnName="id"),
+            inverseJoinColumns=@JoinColumn(name="role_id",referencedColumnName="id"))
     private Set<RoleEntity> roles;
 
 

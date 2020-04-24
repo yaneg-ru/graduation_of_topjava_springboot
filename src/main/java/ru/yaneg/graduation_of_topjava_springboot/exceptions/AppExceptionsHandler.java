@@ -53,7 +53,7 @@ public class AppExceptionsHandler {
         List<String> details = new ArrayList<>();
 
         for (FieldError error : result.getFieldErrors()) {
-            details.add(error.getField() + " - " + error.getDefaultMessage());
+            details.add(error.getField() + " - " + getMessageViaMessageSource(error.getDefaultMessage(),locale));
         }
 
         ErrorMessage errorMessage = new ErrorMessage(

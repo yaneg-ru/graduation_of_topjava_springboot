@@ -25,10 +25,10 @@ import java.util.HashSet;
 import java.util.List;
 
 @RestController
-@RequestMapping("users")
-public class UserController {
+@RequestMapping("eataries")
+public class EateryController {
 
-    private Logger logger = LoggerFactory.getLogger(UserController.class);
+    private Logger logger = LoggerFactory.getLogger(EateryController.class);
 
     @Autowired
     UserService userService;
