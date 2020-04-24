@@ -31,6 +31,18 @@ public class AppExceptionsHandler {
         this.messageSource = new MessageSourceAccessor(messageSource);
     }
 
+
+    @ExceptionHandler(value = {NotFoundEntityException.class})
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorMessage handleNotFoundEntityException(NotFoundEntityException ex, HttpServletRequest request, Locale locale) {
+        return new ErrorMessage(request.getRequestURI(),
+                ErrorType.DATA_NOT_FOUND,
+                getMessageViaMessageSource(ErrorType.DATA_NOT_FOUND.getErrorCode(),locale),
+                getMessageViaMessageSource(ex.getMessage(),locale)
+        );
+    }
+
+
     @ExceptionHandler(value = {UserServiceException.class})
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorMessage handleUserServiceException(UserServiceException ex, HttpServletRequest request, Locale locale) {

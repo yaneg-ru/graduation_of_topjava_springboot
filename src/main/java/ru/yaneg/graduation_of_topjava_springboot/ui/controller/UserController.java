@@ -1,8 +1,6 @@
 package ru.yaneg.graduation_of_topjava_springboot.ui.controller;
 
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
@@ -10,7 +8,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import ru.yaneg.graduation_of_topjava_springboot.exceptions.UniqueMailValidator;
+import ru.yaneg.graduation_of_topjava_springboot.io.validators.ValidatorUserEntity;
 import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.Roles;
 import ru.yaneg.graduation_of_topjava_springboot.service.UserService;
 import ru.yaneg.graduation_of_topjava_springboot.shared.dto.UserDto;
@@ -26,15 +24,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("users")
-public class UserController {
-
-    private Logger logger = LoggerFactory.getLogger(UserController.class);
+public class UserController  extends AbstractController {
 
     @Autowired
     UserService userService;
 
     @Autowired
-    private UniqueMailValidator emailValidator;
+    private ValidatorUserEntity emailValidator;
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
@@ -46,7 +42,6 @@ public class UserController {
 
     @PostAuthorize("hasRole('ADMIN') or returnObject.publicUserId == principal.publicUserId")
     @GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    @CrossOrigin
     public UserResponse getUser(@PathVariable String id) {
         logger.info("getUser by publicUserID = {}", id);
         UserResponse returnValue = new UserResponse();

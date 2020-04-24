@@ -1,111 +1,123 @@
 package ru.yaneg.graduation_of_topjava_springboot.ui.controller;
 
-import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import ru.yaneg.graduation_of_topjava_springboot.exceptions.UniqueMailValidator;
-import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.Roles;
-import ru.yaneg.graduation_of_topjava_springboot.service.UserService;
-import ru.yaneg.graduation_of_topjava_springboot.shared.dto.UserDto;
-import ru.yaneg.graduation_of_topjava_springboot.ui.model.request.UserDetailsRequest;
+import ru.yaneg.graduation_of_topjava_springboot.exceptions.NotFoundEntityException;
+import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.EateryEntity;
+import ru.yaneg.graduation_of_topjava_springboot.io.repository.EateryRepository;
+import ru.yaneg.graduation_of_topjava_springboot.io.validators.ValidatorEateryEntity;
+import ru.yaneg.graduation_of_topjava_springboot.shared.dto.EateryDto;
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.OperationStatusModel;
-import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.UserResponse;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 @RestController
-@RequestMapping("eataries")
-public class EateryController {
-
-    private Logger logger = LoggerFactory.getLogger(EateryController.class);
+@RequestMapping("eateries")
+public class EateryController extends AbstractController {
 
     @Autowired
-    UserService userService;
+    EateryRepository eateryRepository;
 
     @Autowired
-    private UniqueMailValidator emailValidator;
+    private ValidatorEateryEntity validatorEateryEntity;
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
-        binder.addValidators(emailValidator);
+        binder.addValidators(validatorEateryEntity);
     }
 
 
-    private ModelMapper modelMapper = new ModelMapper();
-
-    @PostAuthorize("hasRole('ADMIN') or returnObject.publicUserId == principal.publicUserId")
+    @Secured({"ROLE_ADMIN","ROLE_USER"})
     @GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    @CrossOrigin
-    public UserResponse getUser(@PathVariable String id) {
-        logger.info("getUser by publicUserID = {}", id);
-        UserResponse returnValue = new UserResponse();
+    public EateryDto geEatery(@PathVariable Integer id) {
 
-        UserDto userDto = userService.getUserByPublicUserID(id);
+        EateryDto returnValue = new EateryDto();
 
-        returnValue = modelMapper.map(userDto, UserResponse.class);
+        EateryEntity eateryEntity = eateryRepository.findById(id).orElse(null);
+
+        if (eateryEntity == null) {
+            throw new NotFoundEntityException("error.entity.notFoundById");
+        }
+
+        returnValue = modelMapper.map(eateryEntity, EateryDto.class);
 
         return returnValue;
     }
 
+    @Secured({"ROLE_ADMIN"})
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public UserResponse createUser(@Valid @RequestBody UserDetailsRequest userDetailsRequest) {
-        UserResponse returnValue = new UserResponse();
+    public EateryDto createEatery(@Valid @RequestBody EateryDto eateryDto) {
+        EateryDto returnValue = new EateryDto();
 
-        UserDto userDto = modelMapper.map(userDetailsRequest, UserDto.class);
-        userDto.setRoles(new HashSet<>(Arrays.asList(Roles.ROLE_USER.name())));
-        UserDto createdUser = userService.createUser(userDto);
-        returnValue = modelMapper.map(createdUser, UserResponse.class);
+        EateryEntity eateryEntity = modelMapper.map(eateryDto, EateryEntity.class);
+        EateryEntity createdEatery = eateryRepository.save(eateryEntity);
 
-        return returnValue;
-    }
-
-    @PreAuthorize("hasRole('ADMIN') or #id == principal.publicUserId")
-    @PutMapping(path = "/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public UserResponse updateUser(@PathVariable String id, @Valid @RequestBody UserDetailsRequest userDetailsRequest) {
-        UserResponse returnValue = new UserResponse();
-
-        UserDto userDto = modelMapper.map(userDetailsRequest, UserDto.class);
-
-        UserDto updatedUser = userService.updateUser(id, userDto);
-        returnValue = modelMapper.map(updatedUser, UserResponse.class);
+        returnValue = modelMapper.map(createdEatery, EateryDto.class);
 
         return returnValue;
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #id == principal.publicUserId")
-    @DeleteMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE })
-    public OperationStatusModel deleteUser(@PathVariable String id) {
+    @Secured({"ROLE_ADMIN"})
+    @PutMapping(path = "/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public EateryDto updateEatery(@PathVariable Integer id, @Valid @RequestBody EateryDto eateryDto) {
+        EateryDto returnValue = new EateryDto();
+
+        EateryEntity updatedEatery = eateryRepository.findById(id).orElse(null);
+
+        if (updatedEatery==null) {
+            throw new NotFoundEntityException("error.entity.notFoundById");
+        }
+
+        updatedEatery.setName(eateryDto.getName());
+
+        eateryRepository.save(updatedEatery);
+
+        returnValue = modelMapper.map(updatedEatery, EateryDto.class);
+
+        return returnValue;
+    }
+
+    @Secured({"ROLE_ADMIN"})
+    @DeleteMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public OperationStatusModel deleteUser(@PathVariable Integer id) {
         OperationStatusModel returnValue = new OperationStatusModel();
         returnValue.setOperationName("DELETE");
-        userService.deleteUser(id);
+        EateryEntity eateryEntity = eateryRepository.findById(id).orElse(null);
+        if (eateryEntity==null) {
+            throw new NotFoundEntityException("error.entity.notFoundById");
+        }
+        eateryRepository.deleteById(id);
         returnValue.setOperationResult("SUCCESS");
         return returnValue;
     }
 
-    @Secured({ "ROLE_ADMIN" })
-    @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
-    public List<UserResponse> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
-                                   @RequestParam(value = "limit", defaultValue = "25") int limit) {
-        List<UserResponse> returnValue = new ArrayList<>();
+    @Secured({"ROLE_ADMIN","ROLE_USER"})
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    public List<EateryDto> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
+                                    @RequestParam(value = "limit", defaultValue = "25") int limit) {
+        List<EateryDto> returnValue = new ArrayList<>();
 
-        List<UserDto> users = userService.getUsers(page, limit);
+        if(page>0) page = page-1;
 
-		for (UserDto userDto : users) {
-			UserResponse userModel = new UserResponse();
-            userModel = modelMapper.map(userDto, UserResponse.class);
-			returnValue.add(userModel);
-		}
+        Pageable pageableRequest = PageRequest.of(page, limit);
+
+
+        Page<EateryEntity> eateriesPage = eateryRepository.findAll(pageableRequest);
+        List<EateryEntity> eateries = eateriesPage.getContent();
+
+        for (EateryEntity eateryEntity : eateries) {
+            EateryDto eateryDto = new EateryDto();
+            eateryDto = modelMapper.map(eateryEntity, EateryDto.class);
+            returnValue.add(eateryDto);
+        }
 
         return returnValue;
     }

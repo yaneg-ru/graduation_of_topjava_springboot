@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto user) {
 
         if (userRepository.findByEmail(user.getEmail()) != null)
-            throw new UserServiceException("fields.constrains.emailMustBeUnique");
+            throw new UserServiceException("user.fields.constrains.emailMustBeUnique");
 
         ModelMapper modelMapper = new ModelMapper();
         UserEntity userEntity = modelMapper.map(user, UserEntity.class);

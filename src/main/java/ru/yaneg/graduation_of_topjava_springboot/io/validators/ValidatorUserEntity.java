@@ -1,4 +1,4 @@
-package ru.yaneg.graduation_of_topjava_springboot.exceptions;
+package ru.yaneg.graduation_of_topjava_springboot.io.validators;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import ru.yaneg.graduation_of_topjava_springboot.ui.model.request.UserDetailsReq
 
 
 @Component
-public class UniqueMailValidator implements org.springframework.validation.Validator {
+public class ValidatorUserEntity implements org.springframework.validation.Validator {
 
     @Autowired
     private UserRepository repository;
@@ -35,7 +35,7 @@ public class UniqueMailValidator implements org.springframework.validation.Valid
              currentPublishUserId = userPrincipal.getPublicUserId();
         }
         if (dbUser != null && !dbUser.getPublicUserId().equals(currentPublishUserId)) {
-            errors.rejectValue("email","error", null,"fields.constrains.emailMustBeUnique");
+            errors.rejectValue("email","error", null, "user.fields.constrains.emailMustBeUnique");
         }
     }
 }

@@ -6,6 +6,5 @@ import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.VoteEntity;
 
 @Repository
 public interface VoteRepository extends PagingAndSortingRepository<VoteEntity, Integer> {
-    VoteEntity findByName(String name);
 }
 
