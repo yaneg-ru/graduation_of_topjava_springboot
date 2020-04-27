@@ -1,5 +1,8 @@
 package ru.yaneg.graduation_of_topjava_springboot.io.entitiy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @MappedSuperclass
@@ -26,6 +29,7 @@ public abstract class AbstractBaseEntity {
         return id;
     }
 
+    @JsonIgnore
     public boolean isNew() {
         return this.id == null;
     }

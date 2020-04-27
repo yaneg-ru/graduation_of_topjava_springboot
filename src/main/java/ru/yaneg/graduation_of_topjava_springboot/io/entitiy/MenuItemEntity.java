@@ -5,16 +5,21 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "MENU_ITEM", uniqueConstraints = {@UniqueConstraint(columnNames = {"MENU_ID", "NAME"}, name = "MENU_ITEMS_UNIQUE_MENU_NAME_IDX")})
+@Table(name = "MENU_ITEM", uniqueConstraints = {@UniqueConstraint(columnNames = {"EATERY_ID", "DATA", "NAME"}, name = "MENU_ITEMS_UNIQUE_MENU_NAME_IDX")})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MenuItemEntity extends AbstractNamedEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MENU_ID", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "EATERY_ID", nullable = false)
     @NotNull
-    private MenuEntity menu;
+    private EateryEntity eatery;
+
+    @Column(name = "DATA", nullable = false)
+    @NotNull
+    private LocalDate date;
 
     @Column(name = "PRICE", nullable = false)
     @NotNull
@@ -23,35 +28,27 @@ public class MenuItemEntity extends AbstractNamedEntity {
     public MenuItemEntity() {
     }
 
-    public MenuItemEntity(String name, double price) {
+    public MenuItemEntity(EateryEntity eatery, LocalDate date, String name, Double price) {
         super(name);
+        this.eatery = eatery;
+        this.date = date;
         this.price = price;
     }
 
-    public MenuItemEntity(int id, MenuEntity menu, String name, double price) {
-        super(id, name);
-        this.price = price;
-        this.menu = menu;
+    public EateryEntity getEatery() {
+        return eatery;
     }
 
-    public MenuItemEntity(MenuEntity menu, String name, double price) {
-        super(name);
-        this.price = price;
-        this.menu = menu;
+    public void setEatery(EateryEntity eatery) {
+        this.eatery = eatery;
     }
 
-    public MenuItemEntity(MenuItemEntity menuItem) {
-        super(menuItem.getId(), menuItem.getName());
-        this.price = menuItem.getPrice();
-        this.menu = menuItem.getMenu();
+    public LocalDate getDate() {
+        return date;
     }
 
-    public MenuEntity getMenu() {
-        return menu;
-    }
-
-    public void setMenu(MenuEntity menu) {
-        this.menu = menu;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public Double getPrice() {

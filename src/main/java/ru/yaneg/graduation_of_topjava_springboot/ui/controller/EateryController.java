@@ -109,7 +109,6 @@ public class EateryController extends AbstractController {
 
         Pageable pageableRequest = PageRequest.of(page, limit);
 
-
         Page<EateryEntity> eateriesPage = eateryRepository.findAll(pageableRequest);
         List<EateryEntity> eateries = eateriesPage.getContent();
 

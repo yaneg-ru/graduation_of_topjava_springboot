@@ -6,15 +6,14 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.EateryEntity;
-import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.RoleEntity;
-import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.Roles;
-import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.UserEntity;
+import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.*;
 import ru.yaneg.graduation_of_topjava_springboot.io.repository.EateryRepository;
+import ru.yaneg.graduation_of_topjava_springboot.io.repository.MenuItemRepository;
 import ru.yaneg.graduation_of_topjava_springboot.io.repository.RoleRepository;
 import ru.yaneg.graduation_of_topjava_springboot.io.repository.UserRepository;
 import ru.yaneg.graduation_of_topjava_springboot.shared.Utils;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -37,6 +36,9 @@ public class InitialSetup {
     @Autowired
     EateryRepository eateryRepository;
 
+    @Autowired
+    MenuItemRepository menuItemRepository;
+
 
     @EventListener
     @Transactional
@@ -45,9 +47,9 @@ public class InitialSetup {
         RoleEntity roleUser = createRole(Roles.ROLE_USER.name());
         RoleEntity roleAdmin = createRole(Roles.ROLE_ADMIN.name());
 
-        if(roleAdmin == null) return;
+        if (roleAdmin == null) return;
 
-        if (userRepository.findByEmail("yaneg.ru@gmail.com")==null) {
+        if (userRepository.findByEmail("yaneg.ru@gmail.com") == null) {
             UserEntity adminUser = new UserEntity();
             adminUser.setFirstName("Evgeniy");
             adminUser.setLastName("Zolotarev");
@@ -60,7 +62,7 @@ public class InitialSetup {
             userRepository.save(adminUser);
         }
 
-        if (userRepository.findByEmail("user@mail.com")==null) {
+        if (userRepository.findByEmail("user@mail.com") == null) {
             UserEntity userUser = new UserEntity();
             userUser.setFirstName("FirstName");
             userUser.setLastName("LastName");
@@ -73,19 +75,36 @@ public class InitialSetup {
             userRepository.save(userUser);
         }
 
-        if (eateryRepository.findById(5).orElse(null)==null) {
+        LocalDate date = LocalDate.of(2020, 5, 9);
+
+        if (eateryRepository.findById(5).orElse(null) == null) {
             EateryEntity eateryEntity = new EateryEntity();
             eateryEntity.setName("FirstEatery");
 
             eateryRepository.save(eateryEntity);
+
+            MenuItemEntity menuItemEntity = new MenuItemEntity(eateryEntity, date, "Пункт меню №3", 50.0);
+            menuItemRepository.save(menuItemEntity);
+
+            menuItemEntity = new MenuItemEntity(eateryEntity, date, "Пункт меню №4", 11.77);
+            menuItemRepository.save(menuItemEntity);
         }
 
-        if (eateryRepository.findById(6).orElse(null)==null) {
+        if (eateryRepository.findById(8).orElse(null) == null) {
             EateryEntity eateryEntity = new EateryEntity();
             eateryEntity.setName("SecondEatery");
 
             eateryRepository.save(eateryEntity);
+
+
+            MenuItemEntity menuItemEntity = new MenuItemEntity(eateryEntity, date, "Пункт меню №1", 90.89);
+            menuItemRepository.save(menuItemEntity);
+
+            menuItemEntity = new MenuItemEntity(eateryEntity, date, "Пункт меню №2", 55.77);
+            menuItemRepository.save(menuItemEntity);
         }
+
+
     }
 
     @Transactional

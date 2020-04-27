@@ -3,6 +3,7 @@ package ru.yaneg.graduation_of_topjava_springboot.exceptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,6 +79,23 @@ public class AppExceptionsHandler {
         );
 
         return errorMessage;
+    }
+
+    @ExceptionHandler(value = {DataIntegrityViolationException.class})
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorMessage handleDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request, Locale locale) {
+
+        String textMsg = ex.getMessage();
+
+        if (ex.getMessage().contains("menu_items_unique_menu_name_idx")) {
+            textMsg = "menuItem.fields.constrains.eateryID&date&nameMustBeUnique";
+        }
+
+        return new ErrorMessage(request.getRequestURI(),
+                ErrorType.VALIDATION_ERROR,
+                getMessageViaMessageSource(ErrorType.VALIDATION_ERROR.getErrorCode(),locale),
+                getMessageViaMessageSource(textMsg,locale)
+        );
     }
 
     @ExceptionHandler(value = {Exception.class})
