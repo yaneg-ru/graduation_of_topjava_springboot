@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.EateryEntity;
 import ru.yaneg.graduation_of_topjava_springboot.io.repository.EateryRepository;
-import ru.yaneg.graduation_of_topjava_springboot.shared.dto.EateryDto;
+import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.EateryResponse;
 
 
 @Component
@@ -17,16 +17,16 @@ public class ValidatorEateryEntity implements org.springframework.validation.Val
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return EateryDto.class.isAssignableFrom(clazz);
+        return EateryResponse.class.isAssignableFrom(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        EateryDto eateryDto = ((EateryDto) target);
-        if (eateryDto.getName() == null) {
+        EateryResponse eateryResponse = ((EateryResponse) target);
+        if (eateryResponse.getName() == null) {
             return;
         }
-        EateryEntity dbEatery = repository.findByName(eateryDto.getName());
+        EateryEntity dbEatery = repository.findByName(eateryResponse.getName());
 
         if (dbEatery != null) {
             errors.rejectValue("name","error", null, "eatery.fields.constrains.nameMustBeUnique");

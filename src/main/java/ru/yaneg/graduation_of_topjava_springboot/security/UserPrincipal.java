@@ -39,6 +39,10 @@ public class UserPrincipal implements UserDetails {
         return authorities;
     }
 
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
     @Override
     public String getPassword() {
         return this.userEntity.getEncryptedPassword();

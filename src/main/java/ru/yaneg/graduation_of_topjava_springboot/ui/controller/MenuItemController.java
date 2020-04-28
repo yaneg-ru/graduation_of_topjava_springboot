@@ -39,11 +39,8 @@ public class MenuItemController extends AbstractController {
 
         List<MenuItemResponse> returnValue = new ArrayList<>();
 
-        EateryEntity eateryEntity = eateryRepository.findById(eateryId).orElse(null);
-
-        if (eateryEntity == null) {
-            throw new NotFoundEntityException("error.eatery.notFoundById");
-        }
+        EateryEntity eateryEntity = eateryRepository.findById(eateryId)
+                .orElseThrow(()->new NotFoundEntityException("error.eatery.notFoundById"));
 
         List<MenuItemEntity> menuItemEntityList = menuItemRepository.findAllByDateAndAndEatery(date, eateryEntity);
 
@@ -60,11 +57,8 @@ public class MenuItemController extends AbstractController {
     public MenuItemResponse createMenuItem(@PathVariable Integer eateryId,
                                            @Valid @RequestBody MenuItemRequest menuItemRequest) {
 
-        EateryEntity eateryEntity = eateryRepository.findById(eateryId).orElse(null);
-
-        if (eateryEntity == null) {
-            throw new NotFoundEntityException("error.eatery.notFoundById");
-        }
+        EateryEntity eateryEntity = eateryRepository.findById(eateryId)
+                .orElseThrow(()-> new NotFoundEntityException("error.eatery.notFoundById"));
 
         MenuItemEntity menuItemEntity = modelMapper.map(menuItemRequest, MenuItemEntity.class);
         menuItemEntity.setEatery(eateryEntity);
@@ -82,10 +76,10 @@ public class MenuItemController extends AbstractController {
     public OperationStatusModel deleteUser(@PathVariable Integer menuItemId) {
         OperationStatusModel returnValue = new OperationStatusModel();
         returnValue.setOperationName("DELETE");
-        MenuItemEntity menuItemEntity = menuItemRepository.findById(menuItemId).orElse(null);
-        if (menuItemEntity == null) {
-            throw new NotFoundEntityException("error.menuItem.notFoundById");
-        }
+
+        MenuItemEntity menuItemEntity = menuItemRepository.findById(menuItemId)
+                .orElseThrow(()-> new NotFoundEntityException("error.menuItem.notFoundById"));
+
         menuItemRepository.deleteById(menuItemId);
         returnValue.setOperationResult("SUCCESS");
         return returnValue;
@@ -97,11 +91,8 @@ public class MenuItemController extends AbstractController {
 
         MenuItemResponse returnValue = new MenuItemResponse();
 
-        MenuItemEntity menuItemEntity = menuItemRepository.findById(menuItemId).orElse(null);
-
-        if (menuItemEntity == null) {
-            throw new NotFoundEntityException("error.menuItem.notFoundById");
-        }
+        MenuItemEntity menuItemEntity = menuItemRepository.findById(menuItemId)
+                .orElseThrow(()-> new NotFoundEntityException("error.menuItem.notFoundById"));
 
         returnValue = modelMapper.map(menuItemEntity, MenuItemResponse.class);
 
@@ -115,17 +106,13 @@ public class MenuItemController extends AbstractController {
 
         MenuItemResponse returnValue = new MenuItemResponse();
 
-        MenuItemEntity menuItemEntity = menuItemRepository.findById(menuItemId).orElse(null);
+        MenuItemEntity menuItemEntity = menuItemRepository.findById(menuItemId)
+                .orElseThrow(()-> new NotFoundEntityException("error.menuItem.notFoundById"));
 
-        if (menuItemEntity == null) {
-            throw new NotFoundEntityException("error.menuItem.notFoundById");
-        }
 
-        EateryEntity eateryEntity = eateryRepository.findById(menuItemRequest.getEateryId()).orElse(null);
+        EateryEntity eateryEntity = eateryRepository.findById(menuItemRequest.getEateryId())
+                .orElseThrow(()->new NotFoundEntityException("error.eatery.notFoundById"));
 
-        if (eateryEntity == null) {
-            throw new NotFoundEntityException("error.eatery.notFoundById");
-        }
 
         menuItemEntity.setEatery(eateryEntity);
         menuItemEntity.setName(menuItemRequest.getName());

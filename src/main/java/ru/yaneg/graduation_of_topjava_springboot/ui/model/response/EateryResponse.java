@@ -1,18 +1,18 @@
-package ru.yaneg.graduation_of_topjava_springboot.shared.dto;
+package ru.yaneg.graduation_of_topjava_springboot.ui.model.response;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-public class EateryDto {
-    private String id;
+public class EateryResponse {
+    private Integer id;
     @Size(min = 2, max = 100)
     private String name;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

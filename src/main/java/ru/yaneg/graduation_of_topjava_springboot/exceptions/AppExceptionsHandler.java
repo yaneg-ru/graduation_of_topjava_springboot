@@ -1,8 +1,6 @@
 package ru.yaneg.graduation_of_topjava_springboot.exceptions;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import ru.yaneg.graduation_of_topjava_springboot.shared.Messages;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -25,21 +24,26 @@ import java.util.Locale;
 @ResponseBody
 public class AppExceptionsHandler {
 
-    private final MessageSourceAccessor messageSource;
-
     @Autowired
-    public AppExceptionsHandler(MessageSource messageSource) {
-        this.messageSource = new MessageSourceAccessor(messageSource);
-    }
+    Messages messages;
 
+    @ExceptionHandler(value = {VoteException.class})
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorMessage handleNotFoundEntityException(VoteException ex, HttpServletRequest request, Locale locale) {
+        return new ErrorMessage(request.getRequestURI(),
+                ErrorType.DATA_ERROR,
+                messages.getMessage(ErrorType.DATA_ERROR.getErrorCode(),locale),
+                messages.getMessage(ex.getMessage(),locale)
+        );
+    }
 
     @ExceptionHandler(value = {NotFoundEntityException.class})
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorMessage handleNotFoundEntityException(NotFoundEntityException ex, HttpServletRequest request, Locale locale) {
         return new ErrorMessage(request.getRequestURI(),
                 ErrorType.DATA_NOT_FOUND,
-                getMessageViaMessageSource(ErrorType.DATA_NOT_FOUND.getErrorCode(),locale),
-                getMessageViaMessageSource(ex.getMessage(),locale)
+                messages.getMessage(ErrorType.DATA_NOT_FOUND.getErrorCode(),locale),
+                messages.getMessage(ex.getMessage(),locale)
         );
     }
 
@@ -49,8 +53,8 @@ public class AppExceptionsHandler {
     public ErrorMessage handleUserServiceException(UserServiceException ex, HttpServletRequest request, Locale locale) {
         return new ErrorMessage(request.getRequestURI(),
                 ErrorType.VALIDATION_ERROR,
-                getMessageViaMessageSource(ErrorType.VALIDATION_ERROR.getErrorCode(),locale),
-                getMessageViaMessageSource(ex.getMessage(),locale)
+                messages.getMessage(ErrorType.VALIDATION_ERROR.getErrorCode(),locale),
+                messages.getMessage(ex.getMessage(),locale)
         );
     }
 
@@ -66,15 +70,15 @@ public class AppExceptionsHandler {
         List<String> details = new ArrayList<>();
 
         for (FieldError error : result.getFieldErrors()) {
-            details.add(error.getField() + " - " + getMessageViaMessageSource(error.getDefaultMessage(),locale));
+            details.add(error.getField() + " - " + messages.getMessage(error.getDefaultMessage(),locale));
         }
 
         ErrorMessage errorMessage = new ErrorMessage(
                 request.getRequestURI(),
                 ErrorType.VALIDATION_ERROR,
-                getMessageViaMessageSource(ErrorType.VALIDATION_ERROR.getErrorCode(),locale),
+                messages.getMessage(ErrorType.VALIDATION_ERROR.getErrorCode(),locale),
                 details.stream()
-                        .map(msg -> messageSource.getMessage(msg, msg, locale))
+                        .map(msg -> messages.getMessage(msg, locale))
                         .toArray(String[]::new)
         );
 
@@ -93,8 +97,8 @@ public class AppExceptionsHandler {
 
         return new ErrorMessage(request.getRequestURI(),
                 ErrorType.VALIDATION_ERROR,
-                getMessageViaMessageSource(ErrorType.VALIDATION_ERROR.getErrorCode(),locale),
-                getMessageViaMessageSource(textMsg,locale)
+                messages.getMessage(ErrorType.VALIDATION_ERROR.getErrorCode(),locale),
+                messages.getMessage(textMsg,locale)
         );
     }
 
@@ -104,9 +108,6 @@ public class AppExceptionsHandler {
         return new ResponseEntity<>(ex.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private String getMessageViaMessageSource(String msg, Locale locale) {
-        return messageSource.getMessage(msg, msg, locale);
-    }
 
 }
 

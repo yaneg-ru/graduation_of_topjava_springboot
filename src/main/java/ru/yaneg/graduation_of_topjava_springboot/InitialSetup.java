@@ -7,10 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.*;
-import ru.yaneg.graduation_of_topjava_springboot.io.repository.EateryRepository;
-import ru.yaneg.graduation_of_topjava_springboot.io.repository.MenuItemRepository;
-import ru.yaneg.graduation_of_topjava_springboot.io.repository.RoleRepository;
-import ru.yaneg.graduation_of_topjava_springboot.io.repository.UserRepository;
+import ru.yaneg.graduation_of_topjava_springboot.io.repository.*;
 import ru.yaneg.graduation_of_topjava_springboot.shared.Utils;
 
 import java.time.LocalDate;
@@ -39,6 +36,8 @@ public class InitialSetup {
     @Autowired
     MenuItemRepository menuItemRepository;
 
+    @Autowired
+    VoteRepository voteRepository;
 
     @EventListener
     @Transactional
@@ -49,8 +48,8 @@ public class InitialSetup {
 
         if (roleAdmin == null) return;
 
+        UserEntity adminUser = new UserEntity();;
         if (userRepository.findByEmail("yaneg.ru@gmail.com") == null) {
-            UserEntity adminUser = new UserEntity();
             adminUser.setFirstName("Evgeniy");
             adminUser.setLastName("Zolotarev");
             adminUser.setEmail("yaneg.ru@gmail.com");
@@ -62,8 +61,8 @@ public class InitialSetup {
             userRepository.save(adminUser);
         }
 
+        UserEntity userUser = new UserEntity();;
         if (userRepository.findByEmail("user@mail.com") == null) {
-            UserEntity userUser = new UserEntity();
             userUser.setFirstName("FirstName");
             userUser.setLastName("LastName");
             userUser.setEmail("user@mail.com");
@@ -88,9 +87,15 @@ public class InitialSetup {
 
             menuItemEntity = new MenuItemEntity(eateryEntity, date, "Пункт меню №4", 11.77);
             menuItemRepository.save(menuItemEntity);
+
+            VoteEntity voteEntity = new VoteEntity(eateryEntity, adminUser, date);
+            voteRepository.save(voteEntity);
+            voteEntity = new VoteEntity(eateryEntity, userUser, date);
+            voteRepository.save(voteEntity);
+
         }
 
-        if (eateryRepository.findById(8).orElse(null) == null) {
+        if (eateryRepository.findById(10).orElse(null) == null) {
             EateryEntity eateryEntity = new EateryEntity();
             eateryEntity.setName("SecondEatery");
 
@@ -102,7 +107,9 @@ public class InitialSetup {
 
             menuItemEntity = new MenuItemEntity(eateryEntity, date, "Пункт меню №2", 55.77);
             menuItemRepository.save(menuItemEntity);
+
         }
+
 
 
     }
