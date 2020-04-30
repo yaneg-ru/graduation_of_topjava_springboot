@@ -81,7 +81,7 @@ public class EateryController extends AbstractController {
 
     @Secured({"ROLE_ADMIN"})
     @DeleteMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public OperationStatusModel deleteUser(@PathVariable Integer id) {
+    public OperationStatusModel deleteEatery(@PathVariable Integer id) {
         OperationStatusModel returnValue = new OperationStatusModel();
         returnValue.setOperationName("DELETE");
 
@@ -95,7 +95,7 @@ public class EateryController extends AbstractController {
 
     @Secured({"ROLE_ADMIN","ROLE_USER"})
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-    public List<EateryResponse> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
+    public List<EateryResponse> getEateries(@RequestParam(value = "page", defaultValue = "0") int page,
                                          @RequestParam(value = "limit", defaultValue = "25") int limit) {
         List<EateryResponse> returnValue = new ArrayList<>();
 

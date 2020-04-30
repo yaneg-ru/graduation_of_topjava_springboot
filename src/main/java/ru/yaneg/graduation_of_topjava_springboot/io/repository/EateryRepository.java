@@ -4,8 +4,10 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.EateryEntity;
 
+import java.util.Optional;
+
 @Repository
 public interface EateryRepository extends PagingAndSortingRepository<EateryEntity, Integer> {
-    EateryEntity findByName(String name);
+    Optional<EateryEntity> findByName(String name);
 }
 

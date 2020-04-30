@@ -41,7 +41,8 @@ public class UserControllerTest extends AbstractControllerTest{
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw"))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.details[0]", is("User not found by publicId")));
     }
 
     @Test
@@ -106,7 +107,8 @@ public class UserControllerTest extends AbstractControllerTest{
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.operationResult", is("SUCCESS")));
     }
 
     @Test
@@ -179,12 +181,14 @@ public class UserControllerTest extends AbstractControllerTest{
 
         mvc.perform(MockMvcRequestBuilders.put("/users/" + publicUserId.get())
                 .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyQG1haWwuY29tIn0.DZkw3_YDkd6RbORZ1fi_vKHp1U4YmZKDWAMgwwl1TxHKI1cYmQsWvnVlxvXjBgFhuC7euHxhtA6MGRiCrw_o2A")
+                .header("Accept-Language", "en")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(userDetailsRequest)))
 
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.details[0]", is("email - User with this email already exists")));
     }
 
 

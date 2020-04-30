@@ -26,7 +26,7 @@ public class ValidatorEateryEntity implements org.springframework.validation.Val
         if (eateryResponse.getName() == null) {
             return;
         }
-        EateryEntity dbEatery = repository.findByName(eateryResponse.getName());
+        EateryEntity dbEatery = repository.findByName(eateryResponse.getName()).orElse(null);
 
         if (dbEatery != null) {
             errors.rejectValue("name","error", null, "constraints.eatery.nameMustBeUnique");

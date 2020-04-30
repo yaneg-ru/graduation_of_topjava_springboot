@@ -31,16 +31,6 @@ public class AppExceptionsHandler {
         this.messages = messages;
     }
 
-    @ExceptionHandler(value = {VoteException.class})
-    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
-    public ErrorMessage handleNotFoundEntityException(VoteException ex, HttpServletRequest request, Locale locale) {
-        return new ErrorMessage(request.getRequestURI(),
-                ErrorType.DATA_ERROR,
-                messages.getMessage(ErrorType.DATA_ERROR.getErrorCode(),locale),
-                messages.getMessage(ex.getMessage(),locale)
-        );
-    }
-
     @ExceptionHandler(value = {NotFoundEntityException.class})
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorMessage handleNotFoundEntityException(NotFoundEntityException ex, HttpServletRequest request, Locale locale) {
@@ -52,9 +42,9 @@ public class AppExceptionsHandler {
     }
 
 
-    @ExceptionHandler(value = {UniqueFieldException.class})
+    @ExceptionHandler(value = {UniqueFieldException.class, VoteException.class})
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
-    public ErrorMessage handleUniqueFieldException(UniqueFieldException ex, HttpServletRequest request, Locale locale) {
+    public ErrorMessage handleUniqueFieldException(Exception ex, HttpServletRequest request, Locale locale) {
         return new ErrorMessage(request.getRequestURI(),
                 ErrorType.VALIDATION_ERROR,
                 messages.getMessage(ErrorType.VALIDATION_ERROR.getErrorCode(),locale),
@@ -64,7 +54,7 @@ public class AppExceptionsHandler {
 
 
     @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class})
-    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY) // 422
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorMessage handleMethodArgumentNotValidException(Exception ex, HttpServletRequest request, Locale locale) {
 
         BindingResult result = ex instanceof BindException ?
@@ -93,11 +83,13 @@ public class AppExceptionsHandler {
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorMessage handleDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request, Locale locale) {
 
-        String textMsg = ex.getMessage();
+        String textMsg = "";
 
         if (ex.getMessage().contains("menu_items_unique_menu_name_idx")) {
-            textMsg = "menuItem.fields.constrains.eateryID&date&nameMustBeUnique";
+            textMsg = "constraints.menuItem.eateryIDAndDateAndNameMustBeUnique";
         }
+
+        textMsg = "constraints.dataBase.DataIntegrityViolationException";
 
         return new ErrorMessage(request.getRequestURI(),
                 ErrorType.VALIDATION_ERROR,
