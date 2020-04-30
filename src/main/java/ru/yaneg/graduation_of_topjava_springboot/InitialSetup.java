@@ -49,7 +49,7 @@ public class InitialSetup {
         if (roleAdmin == null) return;
 
         UserEntity adminUser = new UserEntity();;
-        if (userRepository.findByEmail("yaneg.ru@gmail.com") == null) {
+        if (userRepository.findByEmail("yaneg.ru@gmail.com").orElse(null) == null) {
             adminUser.setFirstName("Evgeniy");
             adminUser.setLastName("Zolotarev");
             adminUser.setEmail("yaneg.ru@gmail.com");
@@ -62,7 +62,7 @@ public class InitialSetup {
         }
 
         UserEntity userUser = new UserEntity();;
-        if (userRepository.findByEmail("user@mail.com") == null) {
+        if (userRepository.findByEmail("user@mail.com").orElse(null) == null) {
             userUser.setFirstName("FirstName");
             userUser.setLastName("LastName");
             userUser.setEmail("user@mail.com");

@@ -16,7 +16,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .addMapping("/**")
                 .allowedMethods("*")
                 .allowedOrigins("*");
-
     }
 
     @Override

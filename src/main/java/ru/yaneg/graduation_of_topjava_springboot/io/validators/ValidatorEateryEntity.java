@@ -29,7 +29,7 @@ public class ValidatorEateryEntity implements org.springframework.validation.Val
         EateryEntity dbEatery = repository.findByName(eateryResponse.getName());
 
         if (dbEatery != null) {
-            errors.rejectValue("name","error", null, "eatery.fields.constrains.nameMustBeUnique");
+            errors.rejectValue("name","error", null, "constraints.eatery.nameMustBeUnique");
         }
     }
 }

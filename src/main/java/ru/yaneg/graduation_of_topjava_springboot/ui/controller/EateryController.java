@@ -37,7 +37,7 @@ public class EateryController extends AbstractController {
 
     @Secured({"ROLE_ADMIN","ROLE_USER"})
     @GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public EateryResponse geEatery(@PathVariable Integer id) {
+    public EateryResponse getEatery(@PathVariable Integer id) {
 
         EateryResponse returnValue = new EateryResponse();
 

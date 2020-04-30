@@ -64,7 +64,7 @@ public class VoteController extends AbstractController {
         VoteEntity vote = new VoteEntity();
 
         if (now.toLocalTime().isAfter(LocalTime.of(11, 00, 00))) {
-            throw new VoteException("vote.TooLate");
+            throw new VoteException("vote.tooLate");
         } else {
             vote = voteRepository.findByDateAndUser(now.toLocalDate(), currentUser);
             if (vote == null) {

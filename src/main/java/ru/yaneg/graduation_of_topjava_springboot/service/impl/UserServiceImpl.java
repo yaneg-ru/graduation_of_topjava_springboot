@@ -11,7 +11,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.yaneg.graduation_of_topjava_springboot.exceptions.UserServiceException;
+import ru.yaneg.graduation_of_topjava_springboot.exceptions.NotFoundEntityException;
+import ru.yaneg.graduation_of_topjava_springboot.exceptions.UniqueFieldException;
 import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.RoleEntity;
 import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.UserEntity;
 import ru.yaneg.graduation_of_topjava_springboot.io.repository.RoleRepository;
@@ -44,9 +45,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserDto user) {
 
-        if (userRepository.findByEmail(user.getEmail()) != null)
-            throw new UserServiceException("user.fields.constrains.emailMustBeUnique");
-
         ModelMapper modelMapper = new ModelMapper();
         UserEntity userEntity = modelMapper.map(user, UserEntity.class);
 
@@ -56,39 +54,34 @@ public class UserServiceImpl implements UserService {
 
         // Set roles
         Set<RoleEntity> roleEntities = new HashSet<>();
-        for(String role: user.getRoles()) {
+        for (String role : user.getRoles()) {
             RoleEntity roleEntity = roleRepository.findByName(role);
-            if(roleEntity !=null) {
+            if (roleEntity != null) {
                 roleEntities.add(roleEntity);
             }
         }
 
         userEntity.setRoles(roleEntities);
         UserEntity storedUserDetails = userRepository.save(userEntity);
-        UserDto returnValue  = modelMapper.map(storedUserDetails, UserDto.class);
+        UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
 
         return returnValue;
     }
 
     @Override
     public UserDto getUser(String email) {
-        UserEntity userEntity = userRepository.findByEmail(email);
-
-        if (userEntity == null)
-            throw new UsernameNotFoundException(email);
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundEntityException("error.user.notFoundByEmail"));
 
         UserDto returnValue = new UserDto();
         BeanUtils.copyProperties(userEntity, returnValue);
-
         return returnValue;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserEntity userEntity = userRepository.findByEmail(email);
-
-        if (userEntity == null)
-            throw new UsernameNotFoundException(email);
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundEntityException("error.user.notFoundByEmail"));
 
         return new UserPrincipal(userEntity);
 
@@ -97,10 +90,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserByPublicUserID(String userId) {
         UserDto returnValue = new UserDto();
-        UserEntity userEntity = userRepository.findByPublicUserId(userId);
-
-        if (userEntity == null)
-            throw new UsernameNotFoundException("User with ID: " + userId + " not found");
+        UserEntity userEntity = userRepository.findByPublicUserId(userId)
+                .orElseThrow(() -> new NotFoundEntityException("error.user.notFoundById"));
 
         BeanUtils.copyProperties(userEntity, returnValue);
 
@@ -111,10 +102,8 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(String userId, UserDto user) {
         UserDto returnValue = new UserDto();
 
-        UserEntity userEntity = userRepository.findByPublicUserId(userId);
-
-        if (userEntity == null)
-            throw new UsernameNotFoundException("Record not found");
+        UserEntity userEntity = userRepository.findByPublicUserId(userId)
+                .orElseThrow(() -> new NotFoundEntityException("error.user.notFoundById"));
 
         userEntity.setFirstName(user.getFirstName());
         userEntity.setLastName(user.getLastName());
@@ -128,10 +117,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void deleteUser(String userId) {
-        UserEntity userEntity = userRepository.findByPublicUserId(userId);
 
-        if (userEntity == null)
-            throw new UsernameNotFoundException("Record not found");
+        UserEntity userEntity = userRepository.findByPublicUserId(userId)
+                .orElseThrow(() -> new NotFoundEntityException("error.user.notFoundById"));
 
         userRepository.delete(userEntity);
 
@@ -141,7 +129,7 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> getUsers(int page, int limit) {
         List<UserDto> returnValue = new ArrayList<>();
 
-        if(page>0) page = page-1;
+        if (page > 0) page = page - 1;
 
         Pageable pageableRequest = PageRequest.of(page, limit);
 

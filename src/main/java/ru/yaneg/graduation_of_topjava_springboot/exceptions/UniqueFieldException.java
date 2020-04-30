@@ -1,10 +1,10 @@
 package ru.yaneg.graduation_of_topjava_springboot.exceptions;
 
-public class UserServiceException extends RuntimeException{
+public class UniqueFieldException extends RuntimeException{
 
     private static final long serialVersionUID = 1348771109171435607L;
 
-    public UserServiceException(String message)
+    public UniqueFieldException(String message)
     {
         super(message);
     }

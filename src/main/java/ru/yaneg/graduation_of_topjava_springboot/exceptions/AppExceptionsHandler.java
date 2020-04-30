@@ -24,8 +24,12 @@ import java.util.Locale;
 @ResponseBody
 public class AppExceptionsHandler {
 
+    private final Messages messages;
+
     @Autowired
-    Messages messages;
+    public AppExceptionsHandler(Messages messages) {
+        this.messages = messages;
+    }
 
     @ExceptionHandler(value = {VoteException.class})
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
@@ -48,9 +52,9 @@ public class AppExceptionsHandler {
     }
 
 
-    @ExceptionHandler(value = {UserServiceException.class})
+    @ExceptionHandler(value = {UniqueFieldException.class})
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
-    public ErrorMessage handleUserServiceException(UserServiceException ex, HttpServletRequest request, Locale locale) {
+    public ErrorMessage handleUniqueFieldException(UniqueFieldException ex, HttpServletRequest request, Locale locale) {
         return new ErrorMessage(request.getRequestURI(),
                 ErrorType.VALIDATION_ERROR,
                 messages.getMessage(ErrorType.VALIDATION_ERROR.getErrorCode(),locale),

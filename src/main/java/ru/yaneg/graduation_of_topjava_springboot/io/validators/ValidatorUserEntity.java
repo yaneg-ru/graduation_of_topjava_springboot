@@ -2,9 +2,11 @@ package ru.yaneg.graduation_of_topjava_springboot.io.validators;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.Roles;
 import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.UserEntity;
 import ru.yaneg.graduation_of_topjava_springboot.io.repository.UserRepository;
 import ru.yaneg.graduation_of_topjava_springboot.security.UserPrincipal;
@@ -24,18 +26,24 @@ public class ValidatorUserEntity implements org.springframework.validation.Valid
 
     @Override
     public void validate(Object target, Errors errors) {
-        UserDetailsRequest user = ((UserDetailsRequest) target);
-        if (user.getEmail() == null) {
+        UserDetailsRequest userRequest = ((UserDetailsRequest) target);
+        if (userRequest.getEmail() == null) {
             return;
         }
-        UserEntity dbUser = repository.findByEmail(user.getEmail().toLowerCase());
-        String currentPublishUserId = "";
+        UserEntity dbUser = repository.findByEmail(userRequest.getEmail().toLowerCase()).orElse(null);
+        String currentPublicUserId = "";
+        UserPrincipal currentUser = null;
         if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
-             UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-             currentPublishUserId = userPrincipal.getPublicUserId();
+             currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+             currentPublicUserId = currentUser.getPublicUserId();
         }
-        if (dbUser != null && !dbUser.getPublicUserId().equals(currentPublishUserId)) {
-            errors.rejectValue("email","error", null, "user.fields.constrains.emailMustBeUnique");
+        if (dbUser != null && !dbUser.getPublicUserId().equals(currentPublicUserId)) {
+            if (currentUser!=null
+                    && currentUser.getAuthorities().contains(new SimpleGrantedAuthority(Roles.ROLE_ADMIN.toString()))
+                    && userRequest.getEmail().equals(dbUser.getEmail())) {
+                return;
+            }
+            errors.rejectValue("email","error", null, "constraints.user.emailMustBeUnique");
         }
     }
 }

@@ -13,6 +13,9 @@ public class UserDetailsRequest {
     @Size(min = 7, max = 20)
     private String password;
 
+    public UserDetailsRequest() {
+    }
+
     public String getFirstName() {
         return firstName;
     }
