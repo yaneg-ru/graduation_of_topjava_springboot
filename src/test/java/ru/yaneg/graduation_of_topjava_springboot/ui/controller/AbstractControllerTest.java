@@ -8,7 +8,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yaneg.graduation_of_topjava_springboot.io.repository.EateryRepository;
+import ru.yaneg.graduation_of_topjava_springboot.io.repository.MenuItemRepository;
 import ru.yaneg.graduation_of_topjava_springboot.io.repository.UserRepository;
+
+import java.text.SimpleDateFormat;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -22,9 +25,11 @@ public abstract class AbstractControllerTest {
     UserRepository userRepository;
 
     @Autowired
+    MenuItemRepository menuItemRepository;
+
+    @Autowired
     EateryRepository eateryRepository;
 
     ObjectMapper mapper = new ObjectMapper();
-
 
 }

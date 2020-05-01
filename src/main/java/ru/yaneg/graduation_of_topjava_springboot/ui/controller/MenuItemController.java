@@ -40,7 +40,7 @@ public class MenuItemController extends AbstractController {
         List<MenuItemResponse> returnValue = new ArrayList<>();
 
         EateryEntity eateryEntity = eateryRepository.findById(eateryId)
-                .orElseThrow(()->new NotFoundEntityException("error.eatery.notFoundById"));
+                .orElseThrow(() -> new NotFoundEntityException("error.eatery.notFoundById"));
 
         List<MenuItemEntity> menuItemEntityList = menuItemRepository.findAllByDateAndAndEatery(date, eateryEntity);
 
@@ -58,7 +58,7 @@ public class MenuItemController extends AbstractController {
                                            @Valid @RequestBody MenuItemRequest menuItemRequest) {
 
         EateryEntity eateryEntity = eateryRepository.findById(eateryId)
-                .orElseThrow(()-> new NotFoundEntityException("error.eatery.notFoundById"));
+                .orElseThrow(() -> new NotFoundEntityException("error.eatery.notFoundById"));
 
         MenuItemEntity menuItemEntity = modelMapper.map(menuItemRequest, MenuItemEntity.class);
         menuItemEntity.setEatery(eateryEntity);
@@ -73,26 +73,26 @@ public class MenuItemController extends AbstractController {
 
     @Secured({"ROLE_ADMIN"})
     @DeleteMapping(path = "/menu/{menuItemId}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public OperationStatusModel deleteUser(@PathVariable Integer menuItemId) {
+    public OperationStatusModel deleteMenuItem(@PathVariable Integer menuItemId) {
         OperationStatusModel returnValue = new OperationStatusModel();
         returnValue.setOperationName("DELETE");
 
         MenuItemEntity menuItemEntity = menuItemRepository.findById(menuItemId)
-                .orElseThrow(()-> new NotFoundEntityException("error.menuItem.notFoundById"));
+                .orElseThrow(() -> new NotFoundEntityException("error.menuItem.notFoundById"));
 
         menuItemRepository.deleteById(menuItemId);
         returnValue.setOperationResult("SUCCESS");
         return returnValue;
     }
 
-    @Secured({"ROLE_ADMIN","ROLE_USER"})
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(path = "/menu/{menuItemId}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public MenuItemResponse geEatery(@PathVariable Integer menuItemId) {
+    public MenuItemResponse getMenuItem(@PathVariable Integer menuItemId) {
 
         MenuItemResponse returnValue = new MenuItemResponse();
 
         MenuItemEntity menuItemEntity = menuItemRepository.findById(menuItemId)
-                .orElseThrow(()-> new NotFoundEntityException("error.menuItem.notFoundById"));
+                .orElseThrow(() -> new NotFoundEntityException("error.menuItem.notFoundById"));
 
         returnValue = modelMapper.map(menuItemEntity, MenuItemResponse.class);
 
@@ -100,18 +100,19 @@ public class MenuItemController extends AbstractController {
     }
 
     @Secured({"ROLE_ADMIN"})
-    @PutMapping(path = "/menu/{menuItemId}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public MenuItemResponse updateMenuItem(@PathVariable Integer menuItemId,
+    @PutMapping(path = "/{eateryId}/menu/{menuItemId}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public MenuItemResponse updateMenuItem(@PathVariable Integer eateryId,
+                                           @PathVariable Integer menuItemId,
                                            @Valid @RequestBody MenuItemRequest menuItemRequest) {
 
         MenuItemResponse returnValue = new MenuItemResponse();
 
         MenuItemEntity menuItemEntity = menuItemRepository.findById(menuItemId)
-                .orElseThrow(()-> new NotFoundEntityException("error.menuItem.notFoundById"));
+                .orElseThrow(() -> new NotFoundEntityException("error.menuItem.notFoundById"));
 
 
-        EateryEntity eateryEntity = eateryRepository.findById(menuItemRequest.getEateryId())
-                .orElseThrow(()->new NotFoundEntityException("error.eatery.notFoundById"));
+        EateryEntity eateryEntity = eateryRepository.findById(eateryId)
+                .orElseThrow(() -> new NotFoundEntityException("error.eatery.notFoundById"));
 
 
         menuItemEntity.setEatery(eateryEntity);
@@ -126,15 +127,15 @@ public class MenuItemController extends AbstractController {
         return returnValue;
     }
 
-    @Secured({"ROLE_ADMIN","ROLE_USER"})
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(path = "/menu", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public List<MenuItemResponse> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
-                                           @RequestParam(value = "limit", defaultValue = "25") int limit,
-                                           @RequestParam(value = "date") LocalDate date) {
+    public List<MenuItemResponse> getMenuItemsByDate(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                     @RequestParam(value = "limit", defaultValue = "25") int limit,
+                                                     @RequestParam(value = "date") LocalDate date) {
 
         List<MenuItemResponse> returnValue = new ArrayList<>();
 
-        if(page>0) page = page-1;
+        if (page > 0) page = page - 1;
 
         Pageable pageableRequest = PageRequest.of(page, limit);
 
@@ -142,8 +143,7 @@ public class MenuItemController extends AbstractController {
         List<MenuItemEntity> menuItemEntityList = menuItemPage.getContent();
 
         for (MenuItemEntity menuItemEntity : menuItemEntityList) {
-            MenuItemResponse menuItemResponse = new MenuItemResponse();
-            menuItemResponse = modelMapper.map(menuItemEntity, MenuItemResponse.class);
+            MenuItemResponse menuItemResponse = modelMapper.map(menuItemEntity, MenuItemResponse.class);
             returnValue.add(menuItemResponse);
         }
 

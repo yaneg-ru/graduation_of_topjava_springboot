@@ -9,10 +9,11 @@ import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.MenuItemEntity;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MenuItemRepository extends PagingAndSortingRepository<MenuItemEntity, Integer> {
-    MenuItemEntity findByName(String name);
+    Optional<MenuItemEntity> findByName(String name);
     List<MenuItemEntity> findAllByDateAndAndEatery(LocalDate date, EateryEntity eateryEntity);
     Page<MenuItemEntity> findAllByDate(LocalDate date, Pageable pageable);
 }

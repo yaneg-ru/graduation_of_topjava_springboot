@@ -97,6 +97,7 @@ class EateryControllerTest extends AbstractControllerTest {
 
         mvc.perform(MockMvcRequestBuilders.delete("/eateries/" + eateryId.get())
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Accept-Language", "en")
                 .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw"))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())

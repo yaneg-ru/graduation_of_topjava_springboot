@@ -78,7 +78,6 @@ public class AppExceptionsHandler {
 
         return errorMessage;
     }
-
     @ExceptionHandler(value = {DataIntegrityViolationException.class})
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorMessage handleDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request, Locale locale) {
