@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface VoteRepository extends PagingAndSortingRepository<VoteEntity, Integer> {
     Integer countAllByDateAndEatery(LocalDate date, EateryEntity eateryEntity);
+    Integer countAllByDate(LocalDate date);
     VoteEntity findByDateAndUser(LocalDate date, UserEntity userEntity);
-    List<VoteEntity> findAllByDate(LocalDate date);
 }
 

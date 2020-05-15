@@ -3,7 +3,8 @@ package ru.yaneg.graduation_of_topjava_springboot.ui.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.yaneg.graduation_of_topjava_springboot.exceptions.NotFoundEntityException;
 import ru.yaneg.graduation_of_topjava_springboot.exceptions.VoteException;
@@ -20,13 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("eateries")
+@RequestMapping("votes")
 public class VoteController extends AbstractController {
 
     @Autowired
@@ -38,35 +35,41 @@ public class VoteController extends AbstractController {
     @Autowired
     Messages messages;
 
+
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
-    @GetMapping(path = "/{eateryId}/votes", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Integer getCountVotesByEateryIdAndDate(@PathVariable Integer eateryId,
-                                                  @RequestParam(value = "date") LocalDate date) {
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Integer getCountVotesByDateAndEateryId(@RequestParam(value = "date") LocalDate date,
+                                                  @RequestParam(value = "eateryId", required = false) Integer eateryId) {
 
-        EateryEntity eateryEntity = eateryRepository.findById(eateryId)
-                .orElseThrow(() -> new NotFoundEntityException("error.eatery.notFoundById"));
+        if (eateryId != null) {
+            EateryEntity eateryEntity = eateryRepository.findById(eateryId)
+                    .orElseThrow(() -> new NotFoundEntityException("error.eatery.notFoundById"));
+            return voteRepository.countAllByDateAndEatery(date, eateryEntity);
+        }
 
-        return voteRepository.countAllByDateAndEatery(date, eateryEntity);
+        return voteRepository.countAllByDate(date);
     }
 
+
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
-    @PostMapping(path = "/{eateryId}/votes",
-            consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public VoteResponse vote(@PathVariable Integer eateryId, HttpServletRequest request) {
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @Transactional
+    public VoteResponse vote(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                             @RequestParam(value = "eateryId") Integer eateryId,
+                             HttpServletRequest request) {
 
         EateryEntity eateryEntity = eateryRepository.findById(eateryId)
                 .orElseThrow(() -> new NotFoundEntityException("error.eatery.notFoundById"));
 
-        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity currentUser = userPrincipal.getUserEntity();
 
         LocalDateTime now = LocalDateTime.now();
-        VoteEntity vote = new VoteEntity();
 
-        if (now.toLocalTime().isAfter(LocalTime.of(11, 00, 00))) {
+        VoteEntity vote = voteRepository.findByDateAndUser(now.toLocalDate(), currentUser);
+
+        if (now.toLocalTime().isAfter(LocalTime.of(11, 00, 00)) && vote != null) {
             throw new VoteException("vote.tooLate");
         } else {
-            vote = voteRepository.findByDateAndUser(now.toLocalDate(), currentUser);
             if (vote == null) {
                 vote = new VoteEntity(eateryEntity, currentUser, now.toLocalDate());
             } else {
@@ -85,19 +88,4 @@ public class VoteController extends AbstractController {
 
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
-    @GetMapping(path = "/votes", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Map<EateryEntity, Integer> getAllVotesByDate(@RequestParam(value = "date") LocalDate date) {
-
-        Map<EateryEntity, Integer> returnValue = new HashMap<>();
-        List<VoteEntity> voteEntityList = voteRepository.findAllByDate(date);
-
-        returnValue = voteEntityList
-                .stream()
-                .collect(Collectors
-                        .toMap(VoteEntity::getEatery, voteEntity -> 1, (oldValue, newValue) -> oldValue + newValue)
-                );
-
-        return returnValue;
-    }
 }

@@ -461,9 +461,9 @@ Admin, Regular
 
 **curl:**
 
-curl --location --request POST 'http://localhost:8080/graduation_of_topjava/eateries/10/votes' \
+curl --location --request POST 'http://localhost:8080/graduation_of_topjava/votes?eateryId=10' \
 --header 'Authorization: GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw' \
---header 'Content-Type: application/json'
+--header 'Content-Type: application/json' \
 
 **response body:**  
 
@@ -481,7 +481,7 @@ Admin, Regular
 
 **curl:**
 
-curl --location --request GET 'http://localhost:8080/graduation_of_topjava/eateries/5/votes?date=2020-05-09' \
+curl --location --request GET 'http://localhost:8080/graduation_of_topjava/votes?date=2020-05-09&eateryId=5' \
 --header 'Authorization: GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw'
 
 **response body:**
@@ -495,11 +495,9 @@ Admin, Regular
 
 **curl:**
 
-curl --location --request GET 'http://localhost:8080/graduation_of_topjava/eateries/votes?date=2020-05-09' \
+curl --location --request GET 'http://localhost:8080/graduation_of_topjava/votes?date=2020-05-09' \
 --header 'Authorization: GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw'
 
 **response body:**  
 
-{
-    "EateryEntity:5(ThreeEateryUpd11)": 2
-}
+2
