@@ -23,7 +23,7 @@ class MenuItemControllerTest extends AbstractControllerTest {
     @Order(10)
     void getMenuItem() throws Exception {
 
-        mvc.perform(MockMvcRequestBuilders.get("/eateries/menu/6")
+        mvc.perform(MockMvcRequestBuilders.get("/menu/6")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw"))
                 .andDo(print())
@@ -36,26 +36,14 @@ class MenuItemControllerTest extends AbstractControllerTest {
 
     @Test
     @Order(20)
-    void getAllMenuItemByEateryIdAndDate() throws Exception {
+    void getMenuItemsByEateryIdAndDate() throws Exception {
 
-        mvc.perform(MockMvcRequestBuilders.get("/eateries/5/menu?date=2020-05-09")
+        mvc.perform(MockMvcRequestBuilders.get("/menu?date=2020-05-09&eateryId=10")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
-    }
-
-    @Test
-    @Order(30)
-    void getMenuItemsByDate() throws Exception {
-
-        mvc.perform(MockMvcRequestBuilders.get("/eateries/menu?date=2020-05-09")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(4)));
     }
 
     @Test
@@ -67,7 +55,7 @@ class MenuItemControllerTest extends AbstractControllerTest {
         menuItemRequest.setDate(LocalDate.of(2020, 05, 10));
         menuItemRequest.setPrice(10.5);
 
-        mvc.perform(MockMvcRequestBuilders.post("/eateries/5/menu")
+        mvc.perform(MockMvcRequestBuilders.post("/menu?eateryId=5")
                 .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -91,7 +79,7 @@ class MenuItemControllerTest extends AbstractControllerTest {
         menuItemRequest.setDate(localDate);
         menuItemRequest.setPrice(10.5);
 
-        mvc.perform(MockMvcRequestBuilders.post("/eateries/5/menu")
+        mvc.perform(MockMvcRequestBuilders.post("/menu?eateryId=5")
                 .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw")
                 .header("Accept-Language", "en")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -114,7 +102,7 @@ class MenuItemControllerTest extends AbstractControllerTest {
         menuItemRequest.setDate(LocalDate.of(2020, 5, 10));
         menuItemRequest.setPrice(10.5);
 
-        mvc.perform(MockMvcRequestBuilders.put("/eateries/5/menu/" + menuItemId.get())
+        mvc.perform(MockMvcRequestBuilders.put("/menu/" + menuItemId.get() + "?eateryId=5")
                 .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -140,7 +128,7 @@ class MenuItemControllerTest extends AbstractControllerTest {
         menuItemRequest.setDate(LocalDate.of(2020, 5, 9));
         menuItemRequest.setPrice(50.0);
 
-        mvc.perform(MockMvcRequestBuilders.put("/eateries/5/menu/" + menuItemId.get())
+        mvc.perform(MockMvcRequestBuilders.put("/menu/" + menuItemId.get() + "?eateryId=5")
                 .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -158,7 +146,7 @@ class MenuItemControllerTest extends AbstractControllerTest {
         AtomicReference<Integer> menuItemId = new AtomicReference<>();
         menuItemRepository.findByName("TestMenuItemUpdate").ifPresent(menuItemEntity -> menuItemId.set(menuItemEntity.getId()));
 
-        mvc.perform(MockMvcRequestBuilders.delete("/eateries/menu/" + menuItemId.get())
+        mvc.perform(MockMvcRequestBuilders.delete("/menu/" + menuItemId.get())
                 .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))

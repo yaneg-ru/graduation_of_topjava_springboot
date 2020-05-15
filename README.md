@@ -268,7 +268,7 @@ Admin, Regular
 
 **curl:**
 
-curl --location --request GET 'http://localhost:8080/graduation_of_topjava/eateries/5/menu?date=2020-05-09' \
+curl --location --request GET 'http://localhost:8080/graduation_of_topjava/menu?date=2020-05-09&eateryId=5' \
 --header 'Authorization: GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw' \
 --header 'Content-Type: application/json'
 
@@ -278,80 +278,14 @@ curl --location --request GET 'http://localhost:8080/graduation_of_topjava/eater
     {
         "id": 6,
         "name": "Пункт меню №3",
-        "eatery": {
-            "id": 5,
-            "name": "ThreeEateryUpd11"
-        },
-        "date": "2020-05-09",
         "price": 50.0
     },
     {
         "id": 7,
         "name": "Пункт меню №4",
-        "eatery": {
-            "id": 5,
-            "name": "ThreeEateryUpd11"
-        },
-        "date": "2020-05-09",
         "price": 11.77
     }
 ]
-
-## Get all MenuItem by Date
-
-**access:**  
-Admin, Regular
-
-**curl:**
-
-curl --location --request GET 'http://localhost:8080/graduation_of_topjava/eateries/menu?date=2020-05-09' \
---header 'Authorization: GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw' \
---header 'Content-Type: application/json'
-
-**response body:**
-
-[
-    {
-        "id": 6,
-        "name": "Пункт меню №3",
-        "eatery": {
-            "id": 5,
-            "name": "ThreeEateryUpd11"
-        },
-        "date": "2020-05-09",
-        "price": 50.0
-    },
-    {
-        "id": 7,
-        "name": "Пункт меню №4",
-        "eatery": {
-            "id": 5,
-            "name": "ThreeEateryUpd11"
-        },
-        "date": "2020-05-09",
-        "price": 11.77
-    },
-    {
-        "id": 11,
-        "name": "Пункт меню №1",
-        "eatery": {
-            "id": 10,
-            "name": "SecondEatery"
-        },
-        "date": "2020-05-09",
-        "price": 90.89
-    },
-    {
-        "id": 12,
-        "name": "Пункт меню №2",
-        "eatery": {
-            "id": 10,
-            "name": "SecondEatery"
-        },
-        "date": "2020-05-09",
-        "price": 55.77
-    }
-]  
 
 ## Create MenuItem
 
@@ -360,11 +294,12 @@ Admin
 
 **curl:**
 
-curl --location --request POST 'http://localhost:8080/graduation_of_topjava/eateries/5/menu' \
+curl --location --request POST 'http://localhost:8080/graduation_of_topjava/menu?eateryId=5' \
 --header 'Authorization: GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw' \
 --header 'Content-Type: application/json' \
+--header 'Accept-Language: ru' \
+--header 'Cookie: JSESSIONID=8788754FE0B6BB8A0AEB8A649DA9019F' \
 --data-raw '{
-	"eateryId":"5",
 	"date":"2020-05-08",
 	"name": "created itemMenu by postman",
 	"price": 10.99
@@ -373,11 +308,11 @@ curl --location --request POST 'http://localhost:8080/graduation_of_topjava/eate
 **response body:** 
 
 {
-    "id": 16,
+    "id": 14,
     "name": "created itemMenu by postman",
     "eatery": {
         "id": 5,
-        "name": "ThreeEateryUpd11"
+        "name": "FirstEatery"
     },
     "date": "2020-05-08",
     "price": 10.99
@@ -390,9 +325,11 @@ Admin
 
 **curl:**
 
-curl --location --request PUT 'http://localhost:8080/graduation_of_topjava/eateries/5/menu/16' \
+curl --location --request PUT 'http://localhost:8080/graduation_of_topjava/menu/14?eateryId=5' \
 --header 'Authorization: GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw' \
 --header 'Content-Type: application/json' \
+--header 'Accept-Language: ru' \
+--header 'Cookie: JSESSIONID=8788754FE0B6BB8A0AEB8A649DA9019F' \
 --data-raw '{
 	"date":"2020-05-09",
 	"name": "created itemMenu by postman",
@@ -402,15 +339,15 @@ curl --location --request PUT 'http://localhost:8080/graduation_of_topjava/eater
 **response body:**
 
 {
-    "id": 16,
+    "id": 14,
     "name": "created itemMenu by postman",
     "eatery": {
         "id": 5,
-        "name": "ThreeEateryUpd11"
+        "name": "FirstEatery"
     },
     "date": "2020-05-09",
     "price": 11.99
-}  
+}
 
 ## Delete MenuItem
 
@@ -419,7 +356,7 @@ Admin
 
 **curl:**
 
-curl --location --request DELETE 'http://localhost:8080/graduation_of_topjava/eateries/menu/16' \
+curl --location --request DELETE 'http://localhost:8080/graduation_of_topjava/menu/13' \
 --header 'Authorization: GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw'
 
 **response body:**
@@ -436,7 +373,7 @@ Admin, Regular
 
 **curl:**
 
-curl --location --request GET 'http://localhost:8080/graduation_of_topjava/eateries/menu/12' \
+curl --location --request GET 'http://localhost:8080/graduation_of_topjava/menu/12' \
 --header 'Authorization: GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw'
 
 **response body:**

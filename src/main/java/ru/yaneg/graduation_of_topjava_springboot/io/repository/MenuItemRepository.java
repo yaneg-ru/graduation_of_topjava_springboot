@@ -14,7 +14,6 @@ import java.util.Optional;
 @Repository
 public interface MenuItemRepository extends PagingAndSortingRepository<MenuItemEntity, Integer> {
     Optional<MenuItemEntity> findByName(String name);
-    List<MenuItemEntity> findAllByDateAndAndEatery(LocalDate date, EateryEntity eateryEntity);
-    Page<MenuItemEntity> findAllByDate(LocalDate date, Pageable pageable);
+    Page<MenuItemEntity> findAllByDateAndAndEatery(LocalDate date, EateryEntity eateryEntity, Pageable pageable);
 }
 
