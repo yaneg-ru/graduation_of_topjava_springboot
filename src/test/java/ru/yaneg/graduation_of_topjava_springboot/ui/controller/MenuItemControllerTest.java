@@ -129,6 +129,7 @@ class MenuItemControllerTest extends AbstractControllerTest {
         menuItemRequest.setPrice(50.0);
 
         mvc.perform(MockMvcRequestBuilders.put("/menu/" + menuItemId.get() + "?eateryId=5")
+                .header("Accept-Language", "en")
                 .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)

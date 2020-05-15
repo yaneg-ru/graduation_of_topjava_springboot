@@ -60,14 +60,14 @@ class VoteControllerTest extends AbstractControllerTest {
     @Order(30)
     void getAllVotesByDate() throws Exception {
 
-        String mvcResultAsString = mvc.perform(MockMvcRequestBuilders.get("/votes?date=2020-05-09")
+        mvc.perform(MockMvcRequestBuilders.get("/votes?date=2020-05-09")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Accept-Language", "en")
-                .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw"))
+                .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnb" +
+                        "WFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+                .andExpect(jsonPath("$", is(2)));
 
-        Assert.hasText(mvcResultAsString, "{\"EateryEntity:5(FirstEatery)\":2}");
     }
 }

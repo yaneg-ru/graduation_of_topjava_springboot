@@ -36,6 +36,7 @@ class EateryControllerTest extends AbstractControllerTest {
 
         mvc.perform(MockMvcRequestBuilders.get("/eateries/1")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Accept-Language", "en")
                 .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw"))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
@@ -136,6 +137,7 @@ class EateryControllerTest extends AbstractControllerTest {
 
         mvc.perform(MockMvcRequestBuilders.put("/eateries/"+ eateryId.get())
                 .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw")
+                .header("Accept-Language", "en")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(eateryResponse)))

@@ -39,6 +39,7 @@ public class UserControllerTest extends AbstractControllerTest{
     void getUserNotFound() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/users/1dOrsrg6UjrBZYWS1dHUyLEJ7PWusPP")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Accept-Language", "en")
                 .header("Authorization", "GoTJSBA eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5YW5lZy5ydUBnbWFpbC5jb20ifQ.TabCVlCuBai9OTodeEmR-s5A2ol5As7-YGKCxxWu2Sqfi9-5iiMfsBMfmsIGF8LlDGxRSRkEsISnPH_V5A1Utw"))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
