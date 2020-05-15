@@ -3,6 +3,7 @@ package ru.yaneg.graduation_of_topjava_springboot.shared;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.yaneg.graduation_of_topjava_springboot.security.SecurityConstants;
 
@@ -15,6 +16,9 @@ public class Utils {
 
     private final Random RANDOM = new SecureRandom();
     private final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    @Value("${tokenSecret}")
+    private static String tokenSecret;
 
     public String generateUserId(int length) {
         return generateRandomString(length);
@@ -38,7 +42,7 @@ public class Utils {
         boolean returnValue = false;
 
         try {
-            Claims claims = Jwts.parser().setSigningKey(SecurityConstants.getTokenSecret()).parseClaimsJws(token)
+            Claims claims = Jwts.parser().setSigningKey(tokenSecret).parseClaimsJws(token)
                     .getBody();
 
             Date tokenExpirationDate = claims.getExpiration();
