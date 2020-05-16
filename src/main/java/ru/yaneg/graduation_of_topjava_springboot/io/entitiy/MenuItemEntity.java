@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "MENU_ITEM", uniqueConstraints = {@UniqueConstraint(columnNames = {"EATERY_ID", "DATA", "NAME"}, name = "MENU_ITEMS_UNIQUE_MENU_NAME_IDX")})
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cache(region = "menuItem", usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MenuItemEntity extends AbstractNamedEntity {
 
     @ManyToOne

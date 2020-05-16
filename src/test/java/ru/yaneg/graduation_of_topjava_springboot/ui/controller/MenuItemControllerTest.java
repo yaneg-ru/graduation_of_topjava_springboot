@@ -1,17 +1,21 @@
 package ru.yaneg.graduation_of_topjava_springboot.ui.controller;
 
+import net.sf.ehcache.CacheManager;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.EateryEntity;
+import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.MenuItemEntity;
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.request.MenuItemRequest;
 import ru.yaneg.graduation_of_topjava_springboot.ui.model.response.EateryResponse;
 
 import java.time.LocalDate;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -154,6 +158,15 @@ class MenuItemControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.operationResult", is("SUCCESS")));
+
+    }
+
+    @Test
+    @Order(90)
+    void cacheVerify() throws Exception {
+
+        int size = CacheManager.ALL_CACHE_MANAGERS.get(0).getCache("menuItem").getSize();
+        assertEquals(size,5);
 
     }
 

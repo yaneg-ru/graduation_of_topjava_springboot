@@ -1,6 +1,7 @@
 package ru.yaneg.graduation_of_topjava_springboot.ui.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +32,6 @@ public class MenuItemController extends AbstractController {
 
     @Autowired
     EateryRepository eateryRepository;
-
 
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
