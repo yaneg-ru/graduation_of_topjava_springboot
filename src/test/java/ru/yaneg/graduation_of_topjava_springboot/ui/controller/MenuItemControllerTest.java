@@ -35,7 +35,7 @@ class MenuItemControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.name", is("Пункт меню №3")))
                 .andExpect(jsonPath("$.date", is("2020-05-09")))
                 .andExpect(jsonPath("$.price", is(50.0)))
-                .andExpect(jsonPath("$.eatery.id", is(5)));
+                .andExpect(jsonPath("$.eateryId", is(5)));
     }
 
     @Test
@@ -69,7 +69,7 @@ class MenuItemControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.name", is("TestMenuItem")))
                 .andExpect(jsonPath("$.date", is("2020-05-10")))
                 .andExpect(jsonPath("$.price", is(10.5)))
-                .andExpect(jsonPath("$.eatery.id", is(5)));
+                .andExpect(jsonPath("$.eateryId", is(5)));
 
     }
 
@@ -116,7 +116,7 @@ class MenuItemControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.name", is("TestMenuItemUpdate")))
                 .andExpect(jsonPath("$.date", is("2020-05-10")))
                 .andExpect(jsonPath("$.price", is(10.5)))
-                .andExpect(jsonPath("$.eatery.id", is(5)));
+                .andExpect(jsonPath("$.eateryId", is(5)));
 
     }
 

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 public class MenuItemResponse extends AbstractNamedEntity {
 
-    private EateryEntity eatery;
+    private Integer eateryId;
 
     private LocalDate date;
 
@@ -21,12 +21,12 @@ public class MenuItemResponse extends AbstractNamedEntity {
     public MenuItemResponse() {
     }
 
-    public EateryEntity getEatery() {
-        return eatery;
+    public Integer getEateryId() {
+        return eateryId;
     }
 
-    public void setEatery(EateryEntity eatery) {
-        this.eatery = eatery;
+    public void setEateryId(Integer eateryId) {
+        this.eateryId = eateryId;
     }
 
     public LocalDate getDate() {

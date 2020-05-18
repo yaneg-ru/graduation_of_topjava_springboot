@@ -381,10 +381,7 @@ curl --location --request GET 'http://localhost:8080/graduation_of_topjava/menu/
 {
     "id": 12,
     "name": "Пункт меню №2",
-    "eatery": {
-        "id": 10,
-        "name": "SecondEatery"
-    },
+    "eateryId": 10,
     "date": "2020-05-09",
     "price": 55.77
 }

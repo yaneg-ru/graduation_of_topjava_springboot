@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Cache(region = "menuItem", usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MenuItemEntity extends AbstractNamedEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "EATERY_ID", nullable = false)
     @NotNull
     private EateryEntity eatery;
