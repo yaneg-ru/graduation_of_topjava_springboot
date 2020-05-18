@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.yaneg.graduation_of_topjava_springboot.io.validators.ValidatorUserEntity;
@@ -24,6 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("users")
+@Transactional(readOnly=true)
 public class UserController  extends AbstractController {
 
     @Autowired
@@ -54,6 +56,7 @@ public class UserController  extends AbstractController {
     }
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @Transactional()
     public UserResponse createUser(@Valid @RequestBody UserDetailsRequest userDetailsRequest) {
         UserResponse returnValue = new UserResponse();
 
@@ -67,6 +70,7 @@ public class UserController  extends AbstractController {
 
     @PreAuthorize("hasRole('ADMIN') or #id == principal.publicUserId")
     @PutMapping(path = "/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    @Transactional()
     public UserResponse updateUser(@PathVariable String id, @Valid @RequestBody UserDetailsRequest userDetailsRequest) {
         UserResponse returnValue = new UserResponse();
 
@@ -80,6 +84,7 @@ public class UserController  extends AbstractController {
 
     @PreAuthorize("hasRole('ADMIN') or #id == principal.publicUserId")
     @DeleteMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE })
+    @Transactional()
     public OperationStatusModel deleteUser(@PathVariable String id) {
         OperationStatusModel returnValue = new OperationStatusModel();
         returnValue.setOperationName("DELETE");

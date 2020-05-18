@@ -24,6 +24,7 @@ import java.time.LocalTime;
 
 @RestController
 @RequestMapping("votes")
+@Transactional(readOnly=true)
 public class VoteController extends AbstractController {
 
     @Autowired

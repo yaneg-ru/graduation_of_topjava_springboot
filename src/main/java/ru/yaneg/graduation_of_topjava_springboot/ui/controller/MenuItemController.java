@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.yaneg.graduation_of_topjava_springboot.exceptions.NotFoundEntityException;
 import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.EateryEntity;
@@ -25,6 +26,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("menu")
+@Transactional(readOnly=true)
 public class MenuItemController extends AbstractController {
 
     @Autowired
@@ -62,6 +64,7 @@ public class MenuItemController extends AbstractController {
 
     @Secured({"ROLE_ADMIN"})
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @Transactional()
     public MenuItemResponse createMenuItem(@RequestParam(value = "eateryId") Integer eateryId,
                                            @Valid @RequestBody MenuItemRequest menuItemRequest) {
 
@@ -81,6 +84,7 @@ public class MenuItemController extends AbstractController {
 
     @Secured({"ROLE_ADMIN"})
     @DeleteMapping(path = "/{menuItemId}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @Transactional()
     public OperationStatusModel deleteMenuItem(@PathVariable Integer menuItemId) {
         OperationStatusModel returnValue = new OperationStatusModel();
         returnValue.setOperationName("DELETE");
@@ -105,6 +109,7 @@ public class MenuItemController extends AbstractController {
 
     @Secured({"ROLE_ADMIN"})
     @PutMapping(path = "/{menuItemId}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @Transactional()
     public MenuItemResponse updateMenuItem(@RequestParam(value = "eateryId") Integer eateryId,
                                            @PathVariable Integer menuItemId,
                                            @Valid @RequestBody MenuItemRequest menuItemRequest) {

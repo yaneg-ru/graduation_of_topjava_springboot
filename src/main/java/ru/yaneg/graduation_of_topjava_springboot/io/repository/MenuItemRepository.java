@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.EateryEntity;
 import ru.yaneg.graduation_of_topjava_springboot.io.entitiy.MenuItemEntity;
 
@@ -15,8 +16,11 @@ import java.util.Optional;
 
 @Repository
 public interface MenuItemRepository extends PagingAndSortingRepository<MenuItemEntity, Integer> {
+
+    @Transactional(readOnly=true)
     Optional<MenuItemEntity> findByName(String name);
 
+    @Transactional(readOnly=true)
     @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
     Page<MenuItemEntity> findAllByDateAndAndEatery(LocalDate date, EateryEntity eateryEntity, Pageable pageable);
 }

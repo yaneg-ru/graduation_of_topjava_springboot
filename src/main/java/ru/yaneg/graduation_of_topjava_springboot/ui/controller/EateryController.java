@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.yaneg.graduation_of_topjava_springboot.exceptions.NotFoundEntityException;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("eateries")
+@Transactional(readOnly=true)
 public class EateryController extends AbstractController {
 
     @Autowired
@@ -51,6 +53,7 @@ public class EateryController extends AbstractController {
 
     @Secured({"ROLE_ADMIN"})
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @Transactional()
     public EateryResponse createEatery(@Valid @RequestBody EateryResponse eateryResponse) {
         EateryResponse returnValue = new EateryResponse();
 
@@ -64,6 +67,7 @@ public class EateryController extends AbstractController {
 
     @Secured({"ROLE_ADMIN"})
     @PutMapping(path = "/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @Transactional()
     public EateryResponse updateEatery(@PathVariable Integer id, @Valid @RequestBody EateryResponse eateryResponse) {
         EateryResponse returnValue = new EateryResponse();
 
@@ -81,6 +85,7 @@ public class EateryController extends AbstractController {
 
     @Secured({"ROLE_ADMIN"})
     @DeleteMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @Transactional()
     public OperationStatusModel deleteEatery(@PathVariable Integer id) {
         OperationStatusModel returnValue = new OperationStatusModel();
         returnValue.setOperationName("DELETE");
